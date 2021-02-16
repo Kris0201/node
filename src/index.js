@@ -4,7 +4,7 @@ const express = require('express');
 const session = require('express-session');
 const MysqlStore = require('express-mysql-session')(session);
 const cors = require('cors');
-// const axios = require('axios');
+const axios = require('axios');
 // const cheerio = require('cheerio');
 const jwt = require('jsonwebtoken');
 
