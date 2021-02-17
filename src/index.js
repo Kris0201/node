@@ -138,6 +138,60 @@ app.post('/logout', (req, res)=>{
     });
 })
 
+app.post('/AddToCart1', async(req, res)=>{
+    // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
+    // res.json(rows[0] || 'no')
+
+    let {p_sid, quantity} = req.body;
+    let data = {p_sid, quantity}
+    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
+    const index = check.findIndex((value) => value.p_sid===2)
+    if (index !== -1) {
+        data.quantity += check[0].quantity
+        const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
+        res.json(result || 'no')
+    } else{
+        const [result] = await db.query("INSERT INTO `cart1_items` SET ?", [data]);
+        res.json(result || 'no')
+    }  
+})
+
+app.get('/cart1items', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `products` ON `products`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`member_id` = ?", [0]);
+    res.json(rows || 'no')
+})
+
+app.delete('/cart1items', async(req, res)=>{
+    const [result] = await db.query("DELETE FROM `cart1_items` WHERE p_sid=?", [ req.body.p_sid ]);
+    res.json({
+        success: result.affectedRows===1
+    });
+})
+
+app.post('/Cart1Content1IncreaseQty', async(req, res)=>{
+    let {p_sid, quantity} = req.body;
+    let data = {p_sid, quantity}
+    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
+    const index = check.findIndex((value) => value.p_sid===p_sid)
+    if (index !== -1) {
+        data.quantity += check[0].quantity
+        const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
+        res.json(result || 'no')
+    }
+})
+
+app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
+    let {p_sid, quantity} = req.body;
+    let data = {p_sid, quantity}
+    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
+    const index = check.findIndex((value) => value.p_sid===p_sid)
+    if (index !== -1) {
+        data.quantity -= check[0].quantity
+        const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
+        res.json(result || 'no')
+    }
+})
+
 app.use((req, res)=>{
     res.type('text/plain');
     res.status(404).send('找不到頁面')
