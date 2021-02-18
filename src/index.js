@@ -7,20 +7,14 @@ const cors = require('cors');
 const axios = require('axios');
 // const cheerio = require('cheerio');
 const jwt = require('jsonwebtoken');
-
 const moment = require('moment-timezone');
 const multer = require('multer');
 const upload = require(__dirname + '/modules/upload-imgs')
 const db = require(__dirname + '/modules/db_connect2')
 const sessionStore = new MysqlStore({}, db)
-
 const app = express();
-
-app.set('view engine', 'ejs');
-
-
+// app.set('view engine', 'ejs');
 app.use(express.static('public'));
-
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(session({
@@ -52,9 +46,8 @@ app.get('/', (req, res)=>{
     res.render('../views/dcake/plain')
 
 })
-// app.use('/dcake', cors(corsOptions),require(__dirname + '/routes/dcake'))
+// --------------------------------------------會員-----------------------------------------------------
 app.post('/login', cors(corsOptions),async(req,res)=>{
- 
     const [rows] = await db.query("SELECT * FROM member WHERE account=? AND password=?",[req.body.account, req.body.password])
     if(rows.length===1)
     {
@@ -137,7 +130,7 @@ app.post('/logout', (req, res)=>{
         logout : true,
     });
 })
-
+// ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
     // res.json(rows[0] || 'no')
