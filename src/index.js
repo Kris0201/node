@@ -80,7 +80,7 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
     }
 })
 
-app.post('/loginverify', async (req, res)=>{
+app.get('/loginverify', async (req, res)=>{
     if(req.session.user.account===undefined)
     {
         res.json({
@@ -97,13 +97,31 @@ app.post('/loginverify', async (req, res)=>{
     }
     
 })
-
+app.post('/register',upload.none(),async(req,res)=>{
+    let {username,account,password,email} = req.body;
+    let data =  {username, account,password,email}
+    const [rows] = await db.query("INSERT INTO `member`set ?",[data])
+    if(rows.affectedRows===1)
+    {
+        res.json({
+            register: "註冊成功",
+        })
+    }
+    else{
+        res.json({
+            register: false,
+            body: req.body,
+        })
+    }
+    // res.json({data})
+})
 
 app.put('/edit', upload.none() , async(req,res) => {
     const {username, tel, email, address, birthday} = req.body;
     const data = {username, tel, email, address, birthday};
-
-    const [rows] = await db.query( "UPDATE `member` SET ? WHERE 1",[data])
+    const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+    console.log(token.mid)
+    const [rows] = await db.query( "UPDATE `member` SET ? WHERE mid = ?",[data,token.mid])
     // res.json({
     //     success: rows.changedRows===1
     // });
@@ -120,9 +138,32 @@ app.put('/edit', upload.none() , async(req,res) => {
          })
     }
 });
+app.put('/editpassword', async(req,res) => {
+    const token = jwt.verify(req.body.token, process.env.JWT_KEY);
 
-
-
+   const [result] = await db.query("SELECT `password` FROM `member` WHERE mid=?",[token.mid])
+    if(result[0].password===req.body.password){
+        const [rows] = await db.query( "UPDATE `member` SET `password`=? WHERE mid = ?",[req.body.newpassword,token.mid])
+       if(rows.changedRows===1){
+        res.json({
+            body: req.body,
+            success: "更新成功",
+        })
+       }
+       else{
+        res.json({
+            body: req.body,
+            success: "更新失敗",
+        })
+       }
+    } else {
+        res.json({
+             error : "密碼錯誤",
+             success: false,
+             body: req.body
+         })
+    }
+});
 app.post('/logout', (req, res)=>{
     // req.session.destroy();
     delete req.session.user;
@@ -130,6 +171,7 @@ app.post('/logout', (req, res)=>{
         logout : true,
     });
 })
+
 // ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
@@ -185,6 +227,7 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
     }
 })
 
+<<<<<<< HEAD
 
 app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     const {name, email, mobile, birthday, address} = req.body;
@@ -196,6 +239,22 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     res.json({
         success: result.changedRows===1
     });
+=======
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+    res.json(rows)})
+app.post('/Cart1Content2',  async (req, res)=>{
+    const {form1} = req.body;
+    const data = {form1};
+    console.log(req.body)
+
+    // const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
+    // // affectedRows, changedRows
+    // // 有沒有修改成功要看changedRows， 可以再network preview看到
+    // res.json({
+    //     success: result.changedRows===1
+    // });
+>>>>>>> 1fa9d4b9ba1ce578fdf4e5ac951a0c5d29cca023
 })
 
 app.use((req, res)=>{
