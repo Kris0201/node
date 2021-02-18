@@ -46,6 +46,11 @@ app.get('/', (req, res)=>{
     res.render('../views/dcake/plain')
 
 })
+app.use(function(req, res, next){
+    req.session._garbage = Date();
+    req.session.touch();
+    next();
+});
 // --------------------------------------------會員-----------------------------------------------------
 app.post('/login', cors(corsOptions),async(req,res)=>{
     const [rows] = await db.query("SELECT * FROM member WHERE account=? AND password=?",[req.body.account, req.body.password])
@@ -63,6 +68,7 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
         const [account] = await db.query("SELECT * FROM member WHERE account=?" ,[req.body.account])
         if(account.length===0){
             res.json({
+                code:0,
                 error : "帳號錯誤或不存在",
                 success: false,
                 body: req.body
@@ -71,6 +77,7 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
         const [password] = await db.query("SELECT * FROM member WHERE password=?" ,[req.body.password])
         if(password.length===0){
             res.json({
+                code:1,
                 error : "密碼錯誤",
                 success: false,
                 body: req.body
@@ -147,19 +154,19 @@ app.put('/editpassword', async(req,res) => {
        if(rows.changedRows===1){
         res.json({
             body: req.body,
-            success: "更新成功",
+            update: true,
         })
        }
        else{
         res.json({
             body: req.body,
-            success: "更新失敗",
+            update: "error",
         })
        }
     } else {
         res.json({
              error : "密碼錯誤",
-             success: false,
+             update: false,
              body: req.body
          })
     }
@@ -227,6 +234,19 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
     }
 })
 
+<<<<<<< HEAD
+
+app.post('/Cart1Content2', upload.none(), async (req, res)=>{
+    const {name, email, mobile, birthday, address} = req.body;
+    const data = {name, email, mobile, birthday, address};
+
+    const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
+    // affectedRows, changedRows
+    // 有沒有修改成功要看changedRows， 可以再network preview看到
+    res.json({
+        success: result.changedRows===1
+    });
+=======
 app.use('/studioIntro1', async(req, res)=>{
     const [rows] = await db.query("SELECT * FROM `studioorder`");
     res.json(rows)})
@@ -240,6 +260,7 @@ app.post('/Cart1Content2',  async (req, res)=>{
     // res.json({
     //     success: result.changedRows===1
     // });
+>>>>>>> 1fa9d4b9ba1ce578fdf4e5ac951a0c5d29cca023
 })
 
 app.use((req, res)=>{
@@ -251,3 +272,9 @@ const port = process.env.PORT || 4000;
 app.listen(port, ()=>{
     console.log(`port: ${port}`, new Date());
 })
+
+// ------------------------------------------------教室租借--------------------------------------------------------
+
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+    res.json(rows)})
