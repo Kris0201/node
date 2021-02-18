@@ -46,6 +46,11 @@ app.get('/', (req, res)=>{
     res.render('../views/dcake/plain')
 
 })
+app.use(function(req, res, next){
+    req.session._garbage = Date();
+    req.session.touch();
+    next();
+});
 // --------------------------------------------會員-----------------------------------------------------
 app.post('/login', cors(corsOptions),async(req,res)=>{
     const [rows] = await db.query("SELECT * FROM member WHERE account=? AND password=?",[req.body.account, req.body.password])
@@ -63,6 +68,7 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
         const [account] = await db.query("SELECT * FROM member WHERE account=?" ,[req.body.account])
         if(account.length===0){
             res.json({
+                code:0,
                 error : "帳號錯誤或不存在",
                 success: false,
                 body: req.body
@@ -71,6 +77,7 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
         const [password] = await db.query("SELECT * FROM member WHERE password=?" ,[req.body.password])
         if(password.length===0){
             res.json({
+                code:1,
                 error : "密碼錯誤",
                 success: false,
                 body: req.body
@@ -147,19 +154,19 @@ app.put('/editpassword', async(req,res) => {
        if(rows.changedRows===1){
         res.json({
             body: req.body,
-            success: "更新成功",
+            update: true,
         })
        }
        else{
         res.json({
             body: req.body,
-            success: "更新失敗",
+            update: "error",
         })
        }
     } else {
         res.json({
              error : "密碼錯誤",
-             success: false,
+             update: false,
              body: req.body
          })
     }
