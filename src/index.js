@@ -46,6 +46,11 @@ app.get('/', (req, res)=>{
     res.render('../views/dcake/plain')
 
 })
+app.use(function(req, res, next){
+    req.session._garbage = Date();
+    req.session.touch();
+    next();
+});
 // --------------------------------------------會員-----------------------------------------------------
 app.post('/login', cors(corsOptions),async(req,res)=>{
     const [rows] = await db.query("SELECT * FROM member WHERE account=? AND password=?",[req.body.account, req.body.password])
@@ -63,6 +68,7 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
         const [account] = await db.query("SELECT * FROM member WHERE account=?" ,[req.body.account])
         if(account.length===0){
             res.json({
+                code:0,
                 error : "帳號錯誤或不存在",
                 success: false,
                 body: req.body
@@ -71,6 +77,7 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
         const [password] = await db.query("SELECT * FROM member WHERE password=?" ,[req.body.password])
         if(password.length===0){
             res.json({
+                code:1,
                 error : "密碼錯誤",
                 success: false,
                 body: req.body
@@ -97,25 +104,59 @@ app.get('/loginverify', async (req, res)=>{
     }
     
 })
-app.post('/register',upload.none(),async(req,res)=>{
-    let {username,account,password,email} = req.body;
-    let data =  {username, account,password,email}
-    const [rows] = await db.query("INSERT INTO `member`set ?",[data])
-    if(rows.affectedRows===1)
-    {
+app.post('/register', upload.none(), async (req, res) => {
+    const [result] = await db.query(
+      'SELECT `account` FROM `member` WHERE account=?',
+      req.body.account
+    )
+  
+    if (result.length === 1) {
+      res.json({
+        code: 1,
+        error: '帳號重複',
+        register: false,
+        body: req.body,
+      })
+    } else {
+        if(req.body.password.length < 6){
+            res.json({
+                code: 3,
+                error: '密碼不足六位數',
+                register: false,
+                body: req.body,
+              })
+        }
+    
+      const [rows2] = await db.query(
+        'SELECT `email` FROM `member` WHERE email=?',
+        req.body.email
+      )
+      if (rows2.length === 1) {
         res.json({
-            register: "註冊成功",
+          code: 2,
+          error: '電子郵件重複',
+          register: false,
+          body: req.body,
         })
-    }
-    else{
-        res.json({
+      } else {
+        let { username, account, password, email } = req.body
+        let data = { username, account, password, email }
+        const [rows] = await db.query('INSERT INTO `member`set ?', [data])
+        if (rows.affectedRows === 1) {
+          res.json({
+            register: '註冊成功',
+          })
+        } else {
+          res.json({
             register: false,
             body: req.body,
-        })
+          })
+        }
+      }
     }
     // res.json({data})
-})
-
+  })
+  
 app.put('/edit', upload.none() , async(req,res) => {
     const {username, tel, email, address, birthday} = req.body;
     const data = {username, tel, email, address, birthday};
@@ -147,19 +188,19 @@ app.put('/editpassword', async(req,res) => {
        if(rows.changedRows===1){
         res.json({
             body: req.body,
-            success: "更新成功",
+            update: true,
         })
        }
        else{
         res.json({
             body: req.body,
-            success: "更新失敗",
+            update: "error",
         })
        }
     } else {
         res.json({
              error : "密碼錯誤",
-             success: false,
+             update: false,
              body: req.body
          })
     }
@@ -227,9 +268,7 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
     }
 })
 
-app.use('/studioIntro1', async(req, res)=>{
-    const [rows] = await db.query("SELECT * FROM `studioorder`");
-    res.json(rows)})
+
 app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     const {name, email, mobile, birthday, address} = req.body;
     const data = {name, email, mobile, birthday, address};
@@ -242,6 +281,7 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     });
 })
 
+<<<<<<< HEAD
 
 
 
@@ -255,6 +295,25 @@ app.get('/mainproduct', async(req, res)=>{
 
 
 //所有路由請放在404之前
+=======
+    app.use('/studioIntro1', async(req, res)=>{
+        const [rows] = await db.query("SELECT * FROM `studioorder`");
+        res.json(rows)})
+    
+app.post('/Cart1Content2',  async (req, res)=>{
+    const {form1} = req.body;
+    const data = {form1};
+    console.log(req.body)
+
+    // const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
+    // // affectedRows, changedRows
+    // // 有沒有修改成功要看changedRows， 可以再network preview看到
+    // res.json({
+    //     success: result.changedRows===1
+    // });
+})
+
+>>>>>>> a365fb16c328556705ab16e86a376c9db8f550e6
 app.use((req, res)=>{
     res.type('text/plain');
     res.status(404).send('找不到頁面')
@@ -265,6 +324,7 @@ app.listen(port, ()=>{
     console.log(`port: ${port}`, new Date());
 })
 
+<<<<<<< HEAD
 
 
 // const listHandler = async (req) => {
@@ -304,3 +364,10 @@ app.listen(port, ()=>{
 // }
 
 
+=======
+// ------------------------------------------------教室租借--------------------------------------------------------
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+    res.json(rows)
+})
+>>>>>>> a365fb16c328556705ab16e86a376c9db8f550e6
