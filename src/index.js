@@ -150,7 +150,7 @@ app.post('/AddToCart1', async(req, res)=>{
 })
 
 app.get('/cart1items', async(req, res)=>{
-    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `products` ON `products`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`member_id` = ?", [0]);
+    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `products` ON `products`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [0]);
     res.json(rows || 'no')
 })
 
