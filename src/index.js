@@ -227,6 +227,9 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
     }
 })
 
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+    res.json(rows)})
 app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     const {name, email, mobile, birthday, address} = req.body;
     const data = {name, email, mobile, birthday, address};
