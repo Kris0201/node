@@ -233,9 +233,8 @@ app.use('/studioIntro1', async(req, res)=>{
 app.post('/Cart1Content2',  async (req, res)=>{
     const {form1} = req.body;
     const data = {form1};
-    console.log(req.body)
-
-    // const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
+    
+    const [result] = await db.query("INSERT INTO `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
     // // affectedRows, changedRows
     // // 有沒有修改成功要看changedRows， 可以再network preview看到
     // res.json({
