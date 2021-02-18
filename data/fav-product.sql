@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 -- 資料表結構 `drunken_cake_product_list_blank`
 --
 
-CREATE TABLE `drunken_cake_product_list_blank` (
+CREATE TABLE `fav-product` (
   `p_sid` int(11) NOT NULL,
   `p_name` varchar(255) NOT NULL,
   `p_cate` int(255) NOT NULL,
