@@ -234,19 +234,14 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
     }
 })
 
-app.use('/studioIntro1', async(req, res)=>{
-    const [rows] = await db.query("SELECT * FROM `studioorder`");
-    res.json(rows)})
-app.post('/Cart1Content2',  async (req, res)=>{
-    const {form1} = req.body;
-    const data = {form1};
+// app.get('/Cart1Content2',async (req, res)=>{
     
-    const [result] = await db.query("INSERT INTO `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
-    // // affectedRows, changedRows
-    // // 有沒有修改成功要看changedRows， 可以再network preview看到
-    // res.json({
-    //     success: result.changedRows===1
-    // });
+// })
+
+app.post('/Cart1Content2',  upload.none(), async (req, res)=>{
+    const form1 = req.body;
+    const [result] = await db.query("INSERT INTO `orders1` SET ?", [form1]);
+    console.log(result);
 })
 
 app.use((req, res)=>{
