@@ -242,6 +242,19 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     });
 })
 
+
+
+
+//---------Kris 商品區--------------------
+app.get('/mainproduct', async(req, res)=>{
+    const [rows]=await db.query("SELECT * FROM `product_list`");
+    res.json(rows);
+})
+
+//---------↑  Kris  商品區--------------------
+
+
+//所有路由請放在404之前
 app.use((req, res)=>{
     res.type('text/plain');
     res.status(404).send('找不到頁面')
@@ -251,3 +264,43 @@ const port = process.env.PORT || 4000;
 app.listen(port, ()=>{
     console.log(`port: ${port}`, new Date());
 })
+
+
+
+// const listHandler = async (req) => {
+//     const perPage = 9; 
+//     const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list`");
+
+//     const totalRows = t_rows[0].num;
+//     const totalPages = Math.ceil(totalRows / perPage);
+
+//     let page = parseInt(req.query.page) || 1; //沒有的時候就得到1
+
+//     //限定page的合理範圍
+//     let rows = [];
+//     if (totalRows > 0) {
+//         if (page < 1)
+//             return res.redirect('/product_list/list');
+//         //若走到此行，則不會再進行此行以下的指令
+
+//         if (page > totalPages)
+//             return res.redirect(`/product_list/list?page=${totalPages}`);
+
+
+//         [rows] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]); //LIMIT ? ?：資料的索引值/上限值
+
+//         // rows.forEach(item => {
+//         //     item.birthday = moment(item.birthday).format('YYYY-MM-DD'); 
+//         //     //將list.ejs中的生日格式做轉換
+//         // })
+//     }
+//     return {
+//         perPage,
+//         totalRows,
+//         totalPages,
+//         page,
+//         rows,
+//     }
+// }
+
+
