@@ -185,6 +185,11 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
     }
 })
 
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+    res.json(rows)
+})
+
 app.use((req, res)=>{
     res.type('text/plain');
     res.status(404).send('找不到頁面')
@@ -194,3 +199,6 @@ const port = process.env.PORT || 4000;
 app.listen(port, ()=>{
     console.log(`port: ${port}`, new Date());
 })
+
+
+
