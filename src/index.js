@@ -234,19 +234,6 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
     }
 })
 
-<<<<<<< HEAD
-
-app.post('/Cart1Content2', upload.none(), async (req, res)=>{
-    const {name, email, mobile, birthday, address} = req.body;
-    const data = {name, email, mobile, birthday, address};
-
-    const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
-    // affectedRows, changedRows
-    // 有沒有修改成功要看changedRows， 可以再network preview看到
-    res.json({
-        success: result.changedRows===1
-    });
-=======
 app.use('/studioIntro1', async(req, res)=>{
     const [rows] = await db.query("SELECT * FROM `studioorder`");
     res.json(rows)})
@@ -260,7 +247,6 @@ app.post('/Cart1Content2',  async (req, res)=>{
     // res.json({
     //     success: result.changedRows===1
     // });
->>>>>>> 1fa9d4b9ba1ce578fdf4e5ac951a0c5d29cca023
 })
 
 app.use((req, res)=>{
