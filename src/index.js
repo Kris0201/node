@@ -32,24 +32,13 @@ app.use(session({
 
 const corsOptions = {
     credentials: true,
-//     origin: "*",
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   preflightContinue: false,
-//   optionsSuccessStatus: 204
     origin: function(origin, cb){
         console.log('origin:', origin);
         cb(null, true);
     },
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-//   allowedHeaders: ['Content-Type', 'Authorization'],
 }
 app.use(cors(corsOptions));
-// let allowCrossDomain = function(req, res, next) {
-//     res.header('Access-Control-Allow-Origin', "*");
-//     res.header('Access-Control-Allow-Headers', "*");
-//     next();
-//   }
-//   app.use(allowCrossDomain);
+
 app.use((req, res, next)=>{
     res.locals.baseUrl = req.baseUrl;
     res.locals.url = req.url;
@@ -280,7 +269,41 @@ app.post('/logout', (req, res)=>{
         logout : true,
     });
 })
-
+app.post('/addfavproduct',async(req,res)=>{
+    const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid = ?",[req.body.p_sid])
+    if(rows.length===1){
+        const [result] = await db.query('INSERT INTO `fav-product` set ?',[{...rows[0]}])
+        if (result.affectedRows === 1) {
+            res.json({
+              register: '收藏成功',
+              body: req.body,
+            })
+          } else {
+            res.json({
+              register: false,
+              body: req.body,
+            })
+          }
+    }
+    else{
+        res.json({fav:false})
+    }
+})
+app.delete('/deletefavproduct',async(req,res)=>{
+    const [rows] = await db.query("DELETE FROM `fav-product` WHERE p_sid = ?",[req.body.p_sid])
+ 
+    if (rows.affectedRows === 1) {
+        res.json({
+          delete: '刪除成功',
+          body: req.body,
+        })
+      } else {
+        res.json({
+            delete: false,
+          body: req.body,
+        })
+      }
+})
 // ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
@@ -302,7 +325,7 @@ app.post('/AddToCart1', async(req, res)=>{
 
 app.get('/cart1items', async(req, res)=>{
     console.log(req.session.user.mid)
-    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `products` ON `products`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
+    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
     res.json(rows || 'no')
 })
 
@@ -339,15 +362,16 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
 
 
 app.post('/Cart1Content2', upload.none(), async (req, res)=>{
-    const {name, email, mobile, birthday, address} = req.body;
-    const data = {name, email, mobile, birthday, address};
-
+    // const {name, email, mobile, birthday, address} = req.body;
+    // const data = {name, email, mobile, birthday, address};
+    const inputsAlot = {...req.body};
+    console.log(inputsAlot)
     const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
-    // affectedRows, changedRows
-    // 有沒有修改成功要看changedRows， 可以再network preview看到
-    res.json({
-        success: result.changedRows===1
-    });
+    // // affectedRows, changedRows
+    // // 有沒有修改成功要看changedRows， 可以再network preview看到
+    // res.json({
+    //     success: result.changedRows===1
+    // });
 })
 
 
