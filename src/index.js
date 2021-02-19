@@ -5,6 +5,8 @@ const session = require('express-session');
 const MysqlStore = require('express-mysql-session')(session);
 const cors = require('cors');
 const axios = require('axios');
+const nodemailer = require("nodemailer");
+
 // const cheerio = require('cheerio');
 const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone');
@@ -104,25 +106,59 @@ app.get('/loginverify', async (req, res)=>{
     }
     
 })
-app.post('/register',upload.none(),async(req,res)=>{
-    let {username,account,password,email} = req.body;
-    let data =  {username, account,password,email}
-    const [rows] = await db.query("INSERT INTO `member`set ?",[data])
-    if(rows.affectedRows===1)
-    {
+app.post('/register', upload.none(), async (req, res) => {
+    const [result] = await db.query(
+      'SELECT `account` FROM `member` WHERE account=?',
+      req.body.account
+    )
+  
+    if (result.length === 1) {
+      res.json({
+        code: 1,
+        error: '帳號重複',
+        register: false,
+        body: req.body,
+      })
+    } else {
+        if(req.body.password.length < 6){
+            res.json({
+                code: 3,
+                error: '密碼不足六位數',
+                register: false,
+                body: req.body,
+              })
+        }
+    
+      const [rows2] = await db.query(
+        'SELECT `email` FROM `member` WHERE email=?',
+        req.body.email
+      )
+      if (rows2.length === 1) {
         res.json({
-            register: "註冊成功",
+          code: 2,
+          error: '電子郵件重複',
+          register: false,
+          body: req.body,
         })
-    }
-    else{
-        res.json({
+      } else {
+        let { username, account, password, email } = req.body
+        let data = { username, account, password, email }
+        const [rows] = await db.query('INSERT INTO `member`set ?', [data])
+        if (rows.affectedRows === 1) {
+          res.json({
+            register: '註冊成功',
+          })
+        } else {
+          res.json({
             register: false,
             body: req.body,
-        })
+          })
+        }
+      }
     }
     // res.json({data})
-})
-
+  })
+  
 app.put('/edit', upload.none() , async(req,res) => {
     const {username, tel, email, address, birthday} = req.body;
     const data = {username, tel, email, address, birthday};
@@ -178,7 +214,58 @@ app.post('/logout', (req, res)=>{
         logout : true,
     });
 })
+async function main(email,password) {
 
+    let testAccount = await nodemailer.createTestAccount();
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: 'drunkencake.topic@gmail.com',
+        pass:'drunkencake',
+      },
+    });
+    let info = await transporter.sendMail({
+        from: '"Drunken Cake" <Drunkencake.topic@google.com>', // sender address
+        to: `${email}`, // list of receivers
+        subject: "Drunken Cake 忘記密碼", // Subject line
+        text: "forget password?", // plain text body
+        html: `您的新密碼為 : ${password} , 請至官網修改密碼`, // html body
+      });
+  
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  }
+  
+
+function generatepass(plength){
+    const keylist="abcdefghijklmnopqrstuvwxyz123456789"
+    let temp=''
+    for (i=0;i<plength;i++)
+    temp+=keylist.charAt(Math.floor(Math.random()*keylist.length))
+    return temp
+    }
+
+app.post("/forget",async(req,res)=>{
+    const password =generatepass(6)
+    const [rows] = await db.query( "UPDATE `member` SET `password`=? WHERE email = ?",[password,req.body.email])
+    if(rows.changedRows===1){
+     main(req.body.email,password).catch(console.error);
+     res.json({
+         body: req.body,
+         update: true,
+     })
+     return
+    }
+    else{
+     res.json({
+         body: req.body,
+         update: "電子郵件錯誤或未註冊",
+     })
+    }
+    res.json({"password":password})
+})
 // ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
@@ -235,16 +322,40 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
     }
 })
 
-// app.get('/Cart1Content2',async (req, res)=>{
-    
-// })
 
-app.post('/Cart1Content2',  upload.none(), async (req, res)=>{
-    const form1 = req.body;
-    const [result] = await db.query("INSERT INTO `orders1` SET ?", [form1]);
-    console.log(result);
+app.post('/Cart1Content2', upload.none(), async (req, res)=>{
+    const {name, email, mobile, birthday, address} = req.body;
+    const data = {name, email, mobile, birthday, address};
+
+    const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
+    // affectedRows, changedRows
+    // 有沒有修改成功要看changedRows， 可以再network preview看到
+    res.json({
+        success: result.changedRows===1
+    });
 })
 
+
+
+
+//---------Kris 商品區--------------------
+app.get('/mainproduct', async(req, res)=>{
+    const [rows]=await db.query("SELECT * FROM `product_list`");
+    res.json(rows);
+})
+
+//---------↑  Kris  商品區--------------------
+
+
+//---------教室租借--------------------
+
+
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+      res.json(rows)})
+
+
+//所有路由請放在404之前
 app.use((req, res)=>{
     res.type('text/plain');
     res.status(404).send('找不到頁面')
@@ -255,8 +366,42 @@ app.listen(port, ()=>{
     console.log(`port: ${port}`, new Date());
 })
 
-// ------------------------------------------------教室租借--------------------------------------------------------
 
-app.use('/studioIntro1', async(req, res)=>{
-    const [rows] = await db.query("SELECT * FROM `studioorder`");
-    res.json(rows)})
+
+// const listHandler = async (req) => {
+//     const perPage = 9; 
+//     const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list`");
+
+//     const totalRows = t_rows[0].num;
+//     const totalPages = Math.ceil(totalRows / perPage);
+
+//     let page = parseInt(req.query.page) || 1; //沒有的時候就得到1
+
+//     //限定page的合理範圍
+//     let rows = [];
+//     if (totalRows > 0) {
+//         if (page < 1)
+//             return res.redirect('/product_list/list');
+//         //若走到此行，則不會再進行此行以下的指令
+
+//         if (page > totalPages)
+//             return res.redirect(`/product_list/list?page=${totalPages}`);
+
+
+//         [rows] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]); //LIMIT ? ?：資料的索引值/上限值
+
+//         // rows.forEach(item => {
+//         //     item.birthday = moment(item.birthday).format('YYYY-MM-DD'); 
+//         //     //將list.ejs中的生日格式做轉換
+//         // })
+//     }
+//     return {
+//         perPage,
+//         totalRows,
+//         totalPages,
+//         page,
+//         rows,
+//     }
+// }
+
+
