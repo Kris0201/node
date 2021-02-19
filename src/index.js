@@ -380,12 +380,27 @@ app.post('/Cart1Content2',  async (req, res)=>{
     // });
 })
 
+
+
+
 //---------教室租借--------------------
 
 
 app.use('/studioIntro1', async(req, res)=>{
     const [rows] = await db.query("SELECT * FROM `studioorder`");
       res.json(rows)})
+
+
+app.post('/studiorent', async(req, res)=>{ 
+    const classroom=req.body 
+    const [rows] = await db.query("SELECT * FROM `orders3` WHERE `designated_date`=?",[classroom]);
+    console.log([rows])})
+//  res.json(rows)})  
+
+
+    
+
+
 
 
 //所有路由請放在404之前
@@ -438,8 +453,3 @@ app.listen(port, ()=>{
 // }
 
 
-// ------------------------------------------------教室租借--------------------------------------------------------
-app.use('/studioIntro1', async(req, res)=>{
-    const [rows] = await db.query("SELECT * FROM `studioorder`");
-    res.json(rows)
-})
