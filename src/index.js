@@ -5,6 +5,8 @@ const session = require('express-session');
 const MysqlStore = require('express-mysql-session')(session);
 const cors = require('cors');
 const axios = require('axios');
+const nodemailer = require("nodemailer");
+
 // const cheerio = require('cheerio');
 const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone');
@@ -212,7 +214,58 @@ app.post('/logout', (req, res)=>{
         logout : true,
     });
 })
+async function main(email,password) {
 
+    let testAccount = await nodemailer.createTestAccount();
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: 'drunkencake.topic@gmail.com',
+        pass:'drunkencake',
+      },
+    });
+    let info = await transporter.sendMail({
+        from: '"Drunken Cake" <Drunkencake.topic@google.com>', // sender address
+        to: `${email}`, // list of receivers
+        subject: "Drunken Cake 忘記密碼", // Subject line
+        text: "forget password?", // plain text body
+        html: `您的新密碼為 : ${password} , 請至官網修改密碼`, // html body
+      });
+  
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  }
+  
+
+function generatepass(plength){
+    const keylist="abcdefghijklmnopqrstuvwxyz123456789"
+    let temp=''
+    for (i=0;i<plength;i++)
+    temp+=keylist.charAt(Math.floor(Math.random()*keylist.length))
+    return temp
+    }
+
+app.post("/forget",async(req,res)=>{
+    const password =generatepass(6)
+    const [rows] = await db.query( "UPDATE `member` SET `password`=? WHERE email = ?",[password,req.body.email])
+    if(rows.changedRows===1){
+     main(req.body.email,password).catch(console.error);
+     res.json({
+         body: req.body,
+         update: true,
+     })
+     return
+    }
+    else{
+     res.json({
+         body: req.body,
+         update: "電子郵件錯誤或未註冊",
+     })
+    }
+    res.json({"password":password})
+})
 // ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
