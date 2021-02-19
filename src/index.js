@@ -287,7 +287,7 @@ app.post('/AddToCart1', async(req, res)=>{
 
 app.get('/cart1items', async(req, res)=>{
     console.log(req.session.user.mid)
-    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `products` ON `products`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
+    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
     res.json(rows || 'no')
 })
 
@@ -324,15 +324,16 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
 
 
 app.post('/Cart1Content2', upload.none(), async (req, res)=>{
-    const {name, email, mobile, birthday, address} = req.body;
-    const data = {name, email, mobile, birthday, address};
-
+    // const {name, email, mobile, birthday, address} = req.body;
+    // const data = {name, email, mobile, birthday, address};
+    const inputsAlot = {...req.body};
+    console.log(inputsAlot)
     const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
-    // affectedRows, changedRows
-    // 有沒有修改成功要看changedRows， 可以再network preview看到
-    res.json({
-        success: result.changedRows===1
-    });
+    // // affectedRows, changedRows
+    // // 有沒有修改成功要看changedRows， 可以再network preview看到
+    // res.json({
+    //     success: result.changedRows===1
+    // });
 })
 
 
