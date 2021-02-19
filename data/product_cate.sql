@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-02-18 03:49:10
+-- 產生時間： 2021-02-19 05:27:24
 -- 伺服器版本： 10.4.16-MariaDB
 -- PHP 版本： 7.3.24
 
@@ -18,25 +18,25 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 資料庫： `new cake list`
+-- 資料庫： `topic`
 --
 
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `product-cate`
+-- 資料表結構 `product_cate`
 --
 
-CREATE TABLE `product-cate` (
+CREATE TABLE `product_cate` (
   `sid` int(255) NOT NULL,
   `p_categories` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- 傾印資料表的資料 `product-cate`
+-- 傾印資料表的資料 `product_cate`
 --
 
-INSERT INTO `product-cate` (`sid`, `p_categories`) VALUES
+INSERT INTO `product_cate` (`sid`, `p_categories`) VALUES
 (1, '全部商品'),
 (2, '紅酒風味'),
 (3, '白酒風味'),
@@ -48,9 +48,9 @@ INSERT INTO `product-cate` (`sid`, `p_categories`) VALUES
 --
 
 --
--- 資料表索引 `product-cate`
+-- 資料表索引 `product_cate`
 --
-ALTER TABLE `product-cate`
+ALTER TABLE `product_cate`
   ADD PRIMARY KEY (`sid`);
 
 --
@@ -58,9 +58,9 @@ ALTER TABLE `product-cate`
 --
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `product-cate`
+-- 使用資料表自動遞增(AUTO_INCREMENT) `product_cate`
 --
-ALTER TABLE `product-cate`
+ALTER TABLE `product_cate`
   MODIFY `sid` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 

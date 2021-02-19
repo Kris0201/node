@@ -35,9 +35,10 @@ const corsOptions = {
     origin: function(origin, cb){
         console.log('origin:', origin);
         cb(null, true);
-    }
+    },
 }
 app.use(cors(corsOptions));
+
 app.use((req, res, next)=>{
     res.locals.baseUrl = req.baseUrl;
     res.locals.url = req.url;
@@ -54,6 +55,60 @@ app.use(function(req, res, next){
     next();
 });
 // --------------------------------------------會員-----------------------------------------------------
+//寄 gmail 函式
+async function main(email,password) {
+
+    let testAccount = await nodemailer.createTestAccount();
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: 'drunkencake.topic@gmail.com',
+        pass:'drunkencake',
+      },
+    });
+    let info = await transporter.sendMail({
+        from: '"Drunken Cake" <Drunkencake.topic@google.com>', // sender address
+        to: `${email}`, // list of receivers
+        subject: "Drunken Cake 忘記密碼", // Subject line
+        text: "forget password?", // plain text body
+        html: `您的新密碼為 : ${password} , 請至官網修改密碼`, // html body
+      });
+  
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  }
+  
+//產生亂數密碼
+function generatepass(plength){
+    const keylist="abcdefghijklmnopqrstuvwxyz123456789"
+    let temp=''
+    for (i=0;i<plength;i++)
+    temp+=keylist.charAt(Math.floor(Math.random()*keylist.length))
+    return temp
+    }
+
+app.post('/forget',upload.none(),async(req,res)=>{
+    const password =generatepass(6)
+    const [rows] = await db.query( "UPDATE `member` SET `password`=? WHERE email = ?",[password,req.body.email])
+    if(rows.changedRows===1){
+     main(req.body.email,password).catch(console.error);
+     res.json({
+        "password":password,
+         body: req.body,
+         update: true,
+     })
+     return
+    }
+    else{
+     res.json({
+         code:0,
+         body: req.body,
+         update: "電子郵件錯誤或未註冊",
+     })
+    }
+})
 app.post('/login', cors(corsOptions),async(req,res)=>{
     const [rows] = await db.query("SELECT * FROM member WHERE account=? AND password=?",[req.body.account, req.body.password])
     if(rows.length===1)
@@ -214,57 +269,40 @@ app.post('/logout', (req, res)=>{
         logout : true,
     });
 })
-async function main(email,password) {
-
-    let testAccount = await nodemailer.createTestAccount();
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: 'drunkencake.topic@gmail.com',
-        pass:'drunkencake',
-      },
-    });
-    let info = await transporter.sendMail({
-        from: '"Drunken Cake" <Drunkencake.topic@google.com>', // sender address
-        to: `${email}`, // list of receivers
-        subject: "Drunken Cake 忘記密碼", // Subject line
-        text: "forget password?", // plain text body
-        html: `您的新密碼為 : ${password} , 請至官網修改密碼`, // html body
-      });
-  
-    console.log("Message sent: %s", info.messageId);
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  }
-  
-
-function generatepass(plength){
-    const keylist="abcdefghijklmnopqrstuvwxyz123456789"
-    let temp=''
-    for (i=0;i<plength;i++)
-    temp+=keylist.charAt(Math.floor(Math.random()*keylist.length))
-    return temp
-    }
-
-app.post("/forget",async(req,res)=>{
-    const password =generatepass(6)
-    const [rows] = await db.query( "UPDATE `member` SET `password`=? WHERE email = ?",[password,req.body.email])
-    if(rows.changedRows===1){
-     main(req.body.email,password).catch(console.error);
-     res.json({
-         body: req.body,
-         update: true,
-     })
-     return
+app.post('/addfavproduct',async(req,res)=>{
+    const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid = ?",[req.body.p_sid])
+    if(rows.length===1){
+        const [result] = await db.query('INSERT INTO `fav-product` set ?',[{...rows[0]}])
+        if (result.affectedRows === 1) {
+            res.json({
+              register: '收藏成功',
+              body: req.body,
+            })
+          } else {
+            res.json({
+              register: false,
+              body: req.body,
+            })
+          }
     }
     else{
-     res.json({
-         body: req.body,
-         update: "電子郵件錯誤或未註冊",
-     })
+        res.json({fav:false})
     }
-    res.json({"password":password})
+})
+app.delete('/deletefavproduct',async(req,res)=>{
+    const [rows] = await db.query("DELETE FROM `fav-product` WHERE p_sid = ?",[req.body.p_sid])
+ 
+    if (rows.affectedRows === 1) {
+        res.json({
+          delete: '刪除成功',
+          body: req.body,
+        })
+      } else {
+        res.json({
+            delete: false,
+          body: req.body,
+        })
+      }
 })
 // ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
@@ -348,6 +386,24 @@ app.get('/mainproduct', async(req, res)=>{
 //---------↑  Kris  商品區--------------------
 
 
+//所有路由請放在404之前
+    app.use('/studioIntro1', async(req, res)=>{
+        const [rows] = await db.query("SELECT * FROM `studioorder`");
+        res.json(rows)})
+    
+app.post('/Cart1Content2',  async (req, res)=>{
+    const {form1} = req.body;
+    const data = {form1};
+    console.log(req.body)
+
+    // const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
+    // // affectedRows, changedRows
+    // // 有沒有修改成功要看changedRows， 可以再network preview看到
+    // res.json({
+    //     success: result.changedRows===1
+    // });
+})
+
 //---------教室租借--------------------
 
 
@@ -406,3 +462,8 @@ app.listen(port, ()=>{
 // }
 
 
+// ------------------------------------------------教室租借--------------------------------------------------------
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+    res.json(rows)
+})
