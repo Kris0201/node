@@ -385,6 +385,24 @@ app.get('/mainproduct', async(req, res)=>{
 //---------↑  Kris  商品區--------------------
 
 
+//所有路由請放在404之前
+    app.use('/studioIntro1', async(req, res)=>{
+        const [rows] = await db.query("SELECT * FROM `studioorder`");
+        res.json(rows)})
+    
+app.post('/Cart1Content2',  async (req, res)=>{
+    const {form1} = req.body;
+    const data = {form1};
+    console.log(req.body)
+
+    // const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
+    // // affectedRows, changedRows
+    // // 有沒有修改成功要看changedRows， 可以再network preview看到
+    // res.json({
+    //     success: result.changedRows===1
+    // });
+})
+
 //---------教室租借--------------------
 
 
@@ -443,3 +461,8 @@ app.listen(port, ()=>{
 // }
 
 
+// ------------------------------------------------教室租借--------------------------------------------------------
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+    res.json(rows)
+})
