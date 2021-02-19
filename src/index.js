@@ -293,6 +293,14 @@ app.get('/mainproduct', async(req, res)=>{
 //---------↑  Kris  商品區--------------------
 
 
+//---------教室租借--------------------
+
+
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+      res.json(rows)})
+
+
 //所有路由請放在404之前
 app.use((req, res)=>{
     res.type('text/plain');
