@@ -2,4 +2,3 @@
 
 node_modules
 package-lock.json
-src/modules/db_connect2.js
