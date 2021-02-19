@@ -281,7 +281,6 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     });
 })
 
-<<<<<<< HEAD
 
 
 
@@ -295,7 +294,6 @@ app.get('/mainproduct', async(req, res)=>{
 
 
 //所有路由請放在404之前
-=======
     app.use('/studioIntro1', async(req, res)=>{
         const [rows] = await db.query("SELECT * FROM `studioorder`");
         res.json(rows)})
@@ -313,7 +311,6 @@ app.post('/Cart1Content2',  async (req, res)=>{
     // });
 })
 
->>>>>>> a365fb16c328556705ab16e86a376c9db8f550e6
 app.use((req, res)=>{
     res.type('text/plain');
     res.status(404).send('找不到頁面')
@@ -324,7 +321,6 @@ app.listen(port, ()=>{
     console.log(`port: ${port}`, new Date());
 })
 
-<<<<<<< HEAD
 
 
 // const listHandler = async (req) => {
@@ -364,10 +360,8 @@ app.listen(port, ()=>{
 // }
 
 
-=======
 // ------------------------------------------------教室租借--------------------------------------------------------
 app.use('/studioIntro1', async(req, res)=>{
     const [rows] = await db.query("SELECT * FROM `studioorder`");
     res.json(rows)
 })
->>>>>>> a365fb16c328556705ab16e86a376c9db8f550e6
