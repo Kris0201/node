@@ -106,6 +106,7 @@ app.post('/forget',upload.none(),async(req,res)=>{
     if(rows.changedRows===1){
      main(req.body.email,password).catch(console.error);
      res.json({
+        "password":password,
          body: req.body,
          update: true,
      })
