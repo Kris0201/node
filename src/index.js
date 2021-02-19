@@ -5,6 +5,8 @@ const session = require('express-session');
 const MysqlStore = require('express-mysql-session')(session);
 const cors = require('cors');
 const axios = require('axios');
+const nodemailer = require("nodemailer");
+
 // const cheerio = require('cheerio');
 const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone');
@@ -30,12 +32,24 @@ app.use(session({
 
 const corsOptions = {
     credentials: true,
+//     origin: "*",
+//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   preflightContinue: false,
+//   optionsSuccessStatus: 204
     origin: function(origin, cb){
         console.log('origin:', origin);
         cb(null, true);
-    }
+    },
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+//   allowedHeaders: ['Content-Type', 'Authorization'],
 }
 app.use(cors(corsOptions));
+// let allowCrossDomain = function(req, res, next) {
+//     res.header('Access-Control-Allow-Origin', "*");
+//     res.header('Access-Control-Allow-Headers', "*");
+//     next();
+//   }
+//   app.use(allowCrossDomain);
 app.use((req, res, next)=>{
     res.locals.baseUrl = req.baseUrl;
     res.locals.url = req.url;
@@ -52,6 +66,60 @@ app.use(function(req, res, next){
     next();
 });
 // --------------------------------------------會員-----------------------------------------------------
+//寄 gmail 函式
+async function main(email,password) {
+
+    let testAccount = await nodemailer.createTestAccount();
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: 'drunkencake.topic@gmail.com',
+        pass:'drunkencake',
+      },
+    });
+    let info = await transporter.sendMail({
+        from: '"Drunken Cake" <Drunkencake.topic@google.com>', // sender address
+        to: `${email}`, // list of receivers
+        subject: "Drunken Cake 忘記密碼", // Subject line
+        text: "forget password?", // plain text body
+        html: `您的新密碼為 : ${password} , 請至官網修改密碼`, // html body
+      });
+  
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  }
+  
+//產生亂數密碼
+function generatepass(plength){
+    const keylist="abcdefghijklmnopqrstuvwxyz123456789"
+    let temp=''
+    for (i=0;i<plength;i++)
+    temp+=keylist.charAt(Math.floor(Math.random()*keylist.length))
+    return temp
+    }
+
+app.post('/forget',upload.none(),async(req,res)=>{
+    const password =generatepass(6)
+    const [rows] = await db.query( "UPDATE `member` SET `password`=? WHERE email = ?",[password,req.body.email])
+    if(rows.changedRows===1){
+     main(req.body.email,password).catch(console.error);
+     res.json({
+        "password":password,
+         body: req.body,
+         update: true,
+     })
+     return
+    }
+    else{
+     res.json({
+         code:0,
+         body: req.body,
+         update: "電子郵件錯誤或未註冊",
+     })
+    }
+})
 app.post('/login', cors(corsOptions),async(req,res)=>{
     const [rows] = await db.query("SELECT * FROM member WHERE account=? AND password=?",[req.body.account, req.body.password])
     if(rows.length===1)
@@ -233,7 +301,8 @@ app.post('/AddToCart1', async(req, res)=>{
 })
 
 app.get('/cart1items', async(req, res)=>{
-    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `products` ON `products`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [0]);
+    console.log(req.session.user.mid)
+    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `products` ON `products`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
     res.json(rows || 'no')
 })
 
@@ -311,6 +380,15 @@ app.post('/Cart1Content2',  async (req, res)=>{
     // });
 })
 
+//---------教室租借--------------------
+
+
+app.use('/studioIntro1', async(req, res)=>{
+    const [rows] = await db.query("SELECT * FROM `studioorder`");
+      res.json(rows)})
+
+
+//所有路由請放在404之前
 app.use((req, res)=>{
     res.type('text/plain');
     res.status(404).send('找不到頁面')
