@@ -352,12 +352,22 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
 
 
 
+// const [rows]=await db.query("SELECT * FROM `product_list` WHERE pid=?",[req.body.pid]);
 
 //---------Kris 商品區--------------------
+//商品列表
 app.get('/mainproduct', async(req, res)=>{
     const [rows]=await db.query("SELECT * FROM `product_list`");
     res.json(rows);
 })
+
+//商品詳細頁
+app.post('/mainproductdetail', upload.none(), async(req, res)=>{
+    console.log("測試",req.body)
+    const [rows]=await db.query("SELECT * FROM `product_list` WHERE p_sid=?",[req.body.productSid]);
+    res.json(rows);
+})
+
 
 //---------↑  Kris  商品區--------------------
 
