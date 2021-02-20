@@ -269,18 +269,32 @@ app.post('/logout', (req, res)=>{
         logout : true,
     });
 })
+app.get('/getfavproduct',async(req,res)=>{
+    const [rows] = await db.query("SELECT * FROM `fav-product` ")
+    if(rows.length){ 
+        res.json(
+        rows,
+      )
+    }
+      else{ 
+        res.json({
+        fav: "none",
+        body: rows,
+      })
+    }
+})
 app.post('/addfavproduct',async(req,res)=>{
     const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid = ?",[req.body.p_sid])
     if(rows.length===1){
         const [result] = await db.query('INSERT INTO `fav-product` set ?',[{...rows[0]}])
         if (result.affectedRows === 1) {
             res.json({
-              register: '收藏成功',
+              fav: '收藏成功',
               body: req.body,
             })
           } else {
             res.json({
-              register: false,
+              fav: false,
               body: req.body,
             })
           }
@@ -291,9 +305,11 @@ app.post('/addfavproduct',async(req,res)=>{
 })
 app.delete('/deletefavproduct',async(req,res)=>{
     const [rows] = await db.query("DELETE FROM `fav-product` WHERE p_sid = ?",[req.body.p_sid])
- 
+ console.log(req.body.p_sid)
+ console.log(req.body)
     if (rows.affectedRows === 1) {
         res.json({
+            code:1,
           delete: '刪除成功',
           body: req.body,
         })
