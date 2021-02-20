@@ -26,7 +26,7 @@ app.use(session({
     resave: false,
     store: sessionStore,
     cookie: {
-        maxAge: 1800000
+        maxAge: 180000000
     }
 }));
 
@@ -114,14 +114,19 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
     if(rows.length===1)
     {
         req.session.user = rows[0];
+        // app.locals.account = rows[0].account
+        // app.locals.password = rows[0].password
         mid = rows[0].mid
         const token = jwt.sign({mid}, process.env.JWT_KEY);
         res.json({
             success: true,
             body: rows[0],
             token,
+           account :res.locals.account,
+            password :res.locals.password,
         })
-    }   else {
+    }   
+    else {
         const [account] = await db.query("SELECT * FROM member WHERE account=?" ,[req.body.account])
         if(account.length===0){
             res.json({
@@ -130,36 +135,44 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
                 success: false,
                 body: req.body
             })
+            return
         }
-        const [password] = await db.query("SELECT * FROM member WHERE password=?" ,[req.body.password])
-        if(password.length===0){
+      
+        else{
             res.json({
                 code:1,
                 error : "密碼錯誤",
                 success: false,
                 body: req.body
             })
+            return
         }
 
     }
 })
 
-app.get('/loginverify', async (req, res)=>{
-    if(req.session.user.account===undefined)
+app.post('/loginverify', async (req, res)=>{
+
+    if(!req.session.user)
     {
-        res.json({
+        console.log('loginverify false');
+        res.json({ 
             login: false,
         })
     }
-    const [rows] = await db.query("SELECT * FROM member WHERE account=? AND password=?",[req.session.user.account, req.session.user.password])
+    console.log('loginverify not end');
+    const token = jwt.verify(req.body.mid, process.env.JWT_KEY);
+
+    const [rows] = await db.query("SELECT * FROM member WHERE mid=?",[token.mid])
     if(rows.length===1)
     {
+        console.log('loginverify success');
         res.json({
             login: true,
             body: rows[0],
         })
     }
-    
+   
 })
 app.post('/register', upload.none(), async (req, res) => {
     const [result] = await db.query(
@@ -174,7 +187,9 @@ app.post('/register', upload.none(), async (req, res) => {
         register: false,
         body: req.body,
       })
-    } else {
+      return
+    } 
+    else {
         if(req.body.password.length < 6){
             res.json({
                 code: 3,
@@ -182,34 +197,40 @@ app.post('/register', upload.none(), async (req, res) => {
                 register: false,
                 body: req.body,
               })
+              return
+        }else{
+            const [rows2] = await db.query(
+                'SELECT `email` FROM `member` WHERE email=?',
+                req.body.email
+              )
+              if (rows2.length === 1) {
+                res.json({
+                  code: 2,
+                  error: '電子郵件重複',
+                  register: false,
+                  body: req.body,
+
+                })
+                return  
+               } 
+              else {
+                let { username, account, password, email } = req.body
+                let data = { username, account, password, email }
+                const [rows] = await db.query('INSERT INTO `member`set ?', [data])
+                if (rows.affectedRows === 1) {
+                  res.json({
+                    register: true,
+                  })
+                } else {
+                  res.json({
+                    register: false,
+                    body: req.body,
+                  })
+                }
+              }
         }
     
-      const [rows2] = await db.query(
-        'SELECT `email` FROM `member` WHERE email=?',
-        req.body.email
-      )
-      if (rows2.length === 1) {
-        res.json({
-          code: 2,
-          error: '電子郵件重複',
-          register: false,
-          body: req.body,
-        })
-      } else {
-        let { username, account, password, email } = req.body
-        let data = { username, account, password, email }
-        const [rows] = await db.query('INSERT INTO `member`set ?', [data])
-        if (rows.affectedRows === 1) {
-          res.json({
-            register: '註冊成功',
-          })
-        } else {
-          res.json({
-            register: false,
-            body: req.body,
-          })
-        }
-      }
+    
     }
     // res.json({data})
   })
@@ -243,6 +264,10 @@ app.put('/editpassword', async(req,res) => {
     if(result[0].password===req.body.password){
         const [rows] = await db.query( "UPDATE `member` SET `password`=? WHERE mid = ?",[req.body.newpassword,token.mid])
        if(rows.changedRows===1){
+        // res.locals.password=req.body.newpassword
+        // delete req.session.user;
+        const [rows2] = await db.query("SELECT * FROM member WHERE mid=?",[token.mid])
+        req.session.user=rows2[0]
         res.json({
             body: req.body,
             update: true,
