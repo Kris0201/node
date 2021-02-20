@@ -324,9 +324,11 @@ app.post('/AddToCart1', async(req, res)=>{
 })
 
 app.get('/cart1items', async(req, res)=>{
-    console.log(req.session.user.mid)
-    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
-    res.json(rows || 'no')
+
+    if(req.session.user.mid){
+        const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
+    res.json(rows)}
+    
 })
 
 app.delete('/cart1items', async(req, res)=>{
