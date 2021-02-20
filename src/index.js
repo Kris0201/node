@@ -394,14 +394,85 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
 
 
 
-// const [rows]=await db.query("SELECT * FROM `product_list` WHERE pid=?",[req.body.pid]);
 
 //---------Kris 商品區--------------------
-//商品列表
-app.get('/mainproduct', async(req, res)=>{
-    const [rows]=await db.query("SELECT * FROM `product_list`");
-    res.json(rows);
+//step1：商品列表：一進來的畫面(已和下面程式整合)
+// app.get('/mainproduct', async(req, res)=>{
+//     const [rows]=await db.query("SELECT * FROM `product_list`");
+//     res.json(rows);
+// })
+
+//step2：單純處理分類
+app.post('/mainproductcate', async(req, res)=>{
+    console.log("測試",req.body)
+    if(req.body.productCate==1) {
+        const [rows]=await db.query("SELECT * FROM `product_list`");
+        res.json(rows)
+    }else{
+        const [rows]=await db.query("SELECT * FROM `product_list` WHERE `p_cate` =?", [req.body.productCate]);
+        res.json(rows);
+    }
 })
+
+
+//step3：分類+分頁
+// app.post('/mainproductcate', async(req, res)=>{
+//     // const perPage = 9; 
+//     // const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list` ");
+
+//     // const totalRows = t_rows[0].num;
+//     // console.log('hi',totalRows);
+//     // const totalPages = Math.ceil(totalRows / perPage);
+
+//     // let page = parseInt(req.query.page) || 1; //沒有的時候就得到1
+
+//     // //限定page的合理範圍
+//     // let rows = [];
+//     // if (totalRows > 0) {
+//     //     if (page < 1)
+//     //         return res.redirect('/product_list/list');
+//     //     //若走到此行，則不會再進行此行以下的指令
+
+//     //     if (page > totalPages)
+//     //         return res.redirect(`/product_list/list?page=${totalPages}`);
+
+
+//     //     [rows] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]); //LIMIT ? ?：資料的索引值/上限值
+
+       
+//     // return {
+//     //     perPage,
+//     //     totalRows,
+//     //     totalPages,
+//     //     page,
+//     //     rows,
+//     // }
+
+//     // }
+//     console.log("測試",req.body)
+//     if(req.body.productCate==1) {
+
+// //nowpage
+
+// //per page 9
+
+// //totalrows 51
+
+// //total page = 5
+
+// //limit from ? to ?
+
+//         const [rows]=await db.query("SELECT * FROM `product_list` LIMIT ?, ?",[ req.body.page - 1, 9]);
+//         res.json(rows);
+//     }else{
+
+//         //(page-1) *9 起始值
+
+//         const [rows]=await db.query("SELECT * FROM `product_list` WHERE `p_cate` =? LIMIT ?, ?",[req.body.productCate, req.body.page - 1, 9]);
+//         res.json(rows);
+//     }
+// })
+
 
 //商品詳細頁
 app.post('/mainproductdetail', upload.none(), async(req, res)=>{
@@ -409,6 +480,8 @@ app.post('/mainproductdetail', upload.none(), async(req, res)=>{
     const [rows]=await db.query("SELECT * FROM `product_list` WHERE p_sid=?",[req.body.productSid]);
     res.json(rows);
 })
+
+//分頁
 
 
 //---------↑  Kris  商品區--------------------
@@ -457,6 +530,9 @@ app.listen(port, ()=>{
 
 
 
+
+
+//分頁
 // const listHandler = async (req) => {
 //     const perPage = 9; 
 //     const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list`");
@@ -479,11 +555,7 @@ app.listen(port, ()=>{
 
 //         [rows] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]); //LIMIT ? ?：資料的索引值/上限值
 
-//         // rows.forEach(item => {
-//         //     item.birthday = moment(item.birthday).format('YYYY-MM-DD'); 
-//         //     //將list.ejs中的生日格式做轉換
-//         // })
-//     }
+       
 //     return {
 //         perPage,
 //         totalRows,
@@ -492,4 +564,3 @@ app.listen(port, ()=>{
 //         rows,
 //     }
 // }
-
