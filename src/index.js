@@ -388,7 +388,6 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
 //---------↑  Kris  商品區--------------------
 
 
-<<<<<<< HEAD
 //---------------------------------------------------------------教室租借--------------------
 
 app.use('/studioIntro1', async(req, res)=>{
@@ -412,14 +411,6 @@ app.post('/studiorent', async(req, res)=>{
     // res.json({
     //     success: result.changedRows===1
     // });
-=======
- app.post('/Cart1Content2',  async (req, res)=>{
-    const {form1} = req.body;
-    const data = {form1};
-    console.log(req.body)
-})
-
->>>>>>> 2cefb2993219894187ff48be8bedf73053b5349f
 
 
 
