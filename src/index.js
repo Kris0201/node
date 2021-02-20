@@ -324,9 +324,11 @@ app.post('/AddToCart1', async(req, res)=>{
 })
 
 app.get('/cart1items', async(req, res)=>{
-    console.log(req.session.user.mid)
-    const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
-    res.json(rows || 'no')
+
+    if(req.session.user.mid){
+        const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
+    res.json(rows)}
+    
 })
 
 app.delete('/cart1items', async(req, res)=>{
@@ -386,6 +388,7 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
 //---------↑  Kris  商品區--------------------
 
 
+<<<<<<< HEAD
 //---------------------------------------------------------------教室租借--------------------
 
 app.use('/studioIntro1', async(req, res)=>{
@@ -409,6 +412,14 @@ app.post('/studiorent', async(req, res)=>{
     // res.json({
     //     success: result.changedRows===1
     // });
+=======
+ app.post('/Cart1Content2',  async (req, res)=>{
+    const {form1} = req.body;
+    const data = {form1};
+    console.log(req.body)
+})
+
+>>>>>>> 2cefb2993219894187ff48be8bedf73053b5349f
 
 
 
