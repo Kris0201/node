@@ -395,10 +395,13 @@ app.use('/studioIntro1', async(req, res)=>{
       res.json(rows)})
 
 app.post('/studiorent', async(req, res)=>{ 
-    const classroom=req.body 
+    const classroom=req.body.textInput;
+    console.log('classroom', classroom);
     const [rows] = await db.query("SELECT * FROM `orders3` WHERE `designated_date`=?",[classroom]);
-    console.log([rows])})
-//  res.json(rows)})  
+    console.log('rows',[rows]);
+    res.json(rows);
+})
+
 
 
 
