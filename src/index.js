@@ -380,10 +380,10 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
 
 
 //---------Kris 商品區--------------------
-// app.get('/mainproduct', async(req, res)=>{
-//     const [rows]=await db.query("SELECT * FROM `product_list`");
-//     res.json(rows);
-// })
+app.get('/mainproduct', async(req, res)=>{
+    const [rows]=await db.query("SELECT * FROM `product_list`");
+    res.json(rows);
+})
 
 //---------↑  Kris  商品區--------------------
 
@@ -414,12 +414,6 @@ app.post('/studiorent', async(req, res)=>{
 
 
 
-
-
-
-
-
-    
 
 
 
