@@ -419,12 +419,22 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
 
 
 
+// const [rows]=await db.query("SELECT * FROM `product_list` WHERE pid=?",[req.body.pid]);
 
 //---------Kris 商品區--------------------
+//商品列表
 app.get('/mainproduct', async(req, res)=>{
     const [rows]=await db.query("SELECT * FROM `product_list`");
     res.json(rows);
 })
+
+//商品詳細頁
+app.post('/mainproductdetail', upload.none(), async(req, res)=>{
+    console.log("測試",req.body)
+    const [rows]=await db.query("SELECT * FROM `product_list` WHERE p_sid=?",[req.body.productSid]);
+    res.json(rows);
+})
+
 
 //---------↑  Kris  商品區--------------------
 
@@ -436,10 +446,13 @@ app.use('/studioIntro1', async(req, res)=>{
       res.json(rows)})
 
 app.post('/studiorent', async(req, res)=>{ 
-    const classroom=req.body 
+    const classroom=req.body.textInput;
+    console.log('classroom', classroom);
     const [rows] = await db.query("SELECT * FROM `orders3` WHERE `designated_date`=?",[classroom]);
-    console.log([rows])})
-//  res.json(rows)})  
+    console.log('rows',[rows]);
+    res.json(rows);
+})
+
 
 
 
