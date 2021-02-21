@@ -362,18 +362,26 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
     }
 })
 
-
+// 直接在後端做加總處理，不要在前端做
+// 1.清空cartItems
+// 2.移到order_items1
+// 3.建立orders1
 app.post('/Cart1Content2', upload.none(), async (req, res)=>{
-    // const {name, email, mobile, birthday, address} = req.body;
-    // const data = {name, email, mobile, birthday, address};
     const inputsAlot = {...req.body};
-    console.log(inputsAlot)
-    const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
-    // // affectedRows, changedRows
-    // // 有沒有修改成功要看changedRows， 可以再network preview看到
-    // res.json({
-    //     success: result.changedRows===1
-    // });
+    inputsAlot.mid = req.session.user.mid;
+    inputsAlot.order_date = new Date();
+    const [result] = await db.query("INSERT INTO `orders1` SET ?", [inputsAlot]); 
+    console.log('this is 1st fetch')
+    console.log(result.insertId)
+    const insertId = result.insertId
+    res.json({insertId:insertId})
+})
+
+app.put('/Cart1Content2', upload.none(), async (req, res)=>{
+    const insertID = req.body;
+    console.log('this is 2nd fetch')
+    console.log(insertID)
+    // const [result] = await db.query("INSERT INTO `orders1` SET ?", [inputsAlot]); 
 })
 
 
