@@ -26,7 +26,7 @@ app.use(session({
     resave: false,
     store: sessionStore,
     cookie: {
-        maxAge: 1800000
+        maxAge: 180000000
     }
 }));
 
@@ -114,14 +114,19 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
     if(rows.length===1)
     {
         req.session.user = rows[0];
+        // app.locals.account = rows[0].account
+        // app.locals.password = rows[0].password
         mid = rows[0].mid
         const token = jwt.sign({mid}, process.env.JWT_KEY);
         res.json({
             success: true,
             body: rows[0],
             token,
+           account :res.locals.account,
+            password :res.locals.password,
         })
-    }   else {
+    }   
+    else {
         const [account] = await db.query("SELECT * FROM member WHERE account=?" ,[req.body.account])
         if(account.length===0){
             res.json({
@@ -130,36 +135,44 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
                 success: false,
                 body: req.body
             })
+            return
         }
-        const [password] = await db.query("SELECT * FROM member WHERE password=?" ,[req.body.password])
-        if(password.length===0){
+      
+        else{
             res.json({
                 code:1,
                 error : "密碼錯誤",
                 success: false,
                 body: req.body
             })
+            return
         }
 
     }
 })
 
-app.get('/loginverify', async (req, res)=>{
-    if(req.session.user.account===undefined)
+app.post('/loginverify', async (req, res)=>{
+
+    if(!req.session.user)
     {
-        res.json({
+        console.log('loginverify false');
+        res.json({ 
             login: false,
         })
     }
-    const [rows] = await db.query("SELECT * FROM member WHERE account=? AND password=?",[req.session.user.account, req.session.user.password])
+    console.log('loginverify not end');
+    const token = jwt.verify(req.body.mid, process.env.JWT_KEY);
+
+    const [rows] = await db.query("SELECT * FROM member WHERE mid=?",[token.mid])
     if(rows.length===1)
     {
+        console.log('loginverify success');
         res.json({
             login: true,
             body: rows[0],
         })
     }
-    
+   
 })
 app.post('/register', upload.none(), async (req, res) => {
     const [result] = await db.query(
@@ -174,7 +187,9 @@ app.post('/register', upload.none(), async (req, res) => {
         register: false,
         body: req.body,
       })
-    } else {
+      return
+    } 
+    else {
         if(req.body.password.length < 6){
             res.json({
                 code: 3,
@@ -182,34 +197,40 @@ app.post('/register', upload.none(), async (req, res) => {
                 register: false,
                 body: req.body,
               })
+              return
+        }else{
+            const [rows2] = await db.query(
+                'SELECT `email` FROM `member` WHERE email=?',
+                req.body.email
+              )
+              if (rows2.length === 1) {
+                res.json({
+                  code: 2,
+                  error: '電子郵件重複',
+                  register: false,
+                  body: req.body,
+
+                })
+                return  
+               } 
+              else {
+                let { username, account, password, email } = req.body
+                let data = { username, account, password, email }
+                const [rows] = await db.query('INSERT INTO `member`set ?', [data])
+                if (rows.affectedRows === 1) {
+                  res.json({
+                    register: true,
+                  })
+                } else {
+                  res.json({
+                    register: false,
+                    body: req.body,
+                  })
+                }
+              }
         }
     
-      const [rows2] = await db.query(
-        'SELECT `email` FROM `member` WHERE email=?',
-        req.body.email
-      )
-      if (rows2.length === 1) {
-        res.json({
-          code: 2,
-          error: '電子郵件重複',
-          register: false,
-          body: req.body,
-        })
-      } else {
-        let { username, account, password, email } = req.body
-        let data = { username, account, password, email }
-        const [rows] = await db.query('INSERT INTO `member`set ?', [data])
-        if (rows.affectedRows === 1) {
-          res.json({
-            register: '註冊成功',
-          })
-        } else {
-          res.json({
-            register: false,
-            body: req.body,
-          })
-        }
-      }
+    
     }
     // res.json({data})
   })
@@ -243,6 +264,10 @@ app.put('/editpassword', async(req,res) => {
     if(result[0].password===req.body.password){
         const [rows] = await db.query( "UPDATE `member` SET `password`=? WHERE mid = ?",[req.body.newpassword,token.mid])
        if(rows.changedRows===1){
+        // res.locals.password=req.body.newpassword
+        // delete req.session.user;
+        const [rows2] = await db.query("SELECT * FROM member WHERE mid=?",[token.mid])
+        req.session.user=rows2[0]
         res.json({
             body: req.body,
             update: true,
@@ -269,18 +294,32 @@ app.post('/logout', (req, res)=>{
         logout : true,
     });
 })
+app.get('/getfavproduct',async(req,res)=>{
+    const [rows] = await db.query("SELECT * FROM `fav-product` ")
+    if(rows.length){ 
+        res.json(
+        rows,
+      )
+    }
+      else{ 
+        res.json({
+        fav: "none",
+        body: rows,
+      })
+    }
+})
 app.post('/addfavproduct',async(req,res)=>{
     const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid = ?",[req.body.p_sid])
     if(rows.length===1){
         const [result] = await db.query('INSERT INTO `fav-product` set ?',[{...rows[0]}])
         if (result.affectedRows === 1) {
             res.json({
-              register: '收藏成功',
+              fav: '收藏成功',
               body: req.body,
             })
           } else {
             res.json({
-              register: false,
+              fav: false,
               body: req.body,
             })
           }
@@ -291,9 +330,11 @@ app.post('/addfavproduct',async(req,res)=>{
 })
 app.delete('/deletefavproduct',async(req,res)=>{
     const [rows] = await db.query("DELETE FROM `fav-product` WHERE p_sid = ?",[req.body.p_sid])
- 
+ console.log(req.body.p_sid)
+ console.log(req.body)
     if (rows.affectedRows === 1) {
         res.json({
+            code:1,
           delete: '刪除成功',
           body: req.body,
         })
@@ -388,10 +429,93 @@ app.put('/Cart1Content2', upload.none(), async (req, res)=>{
 
 
 //---------Kris 商品區--------------------
+//step1：商品列表：一進來的畫面(已和下面程式整合)
 // app.get('/mainproduct', async(req, res)=>{
 //     const [rows]=await db.query("SELECT * FROM `product_list`");
 //     res.json(rows);
 // })
+
+//step2：單純處理分類
+app.post('/mainproductcate', async(req, res)=>{
+    console.log("測試",req.body)
+    if(req.body.productCate==1) {
+        const [rows]=await db.query("SELECT * FROM `product_list`");
+        res.json(rows)
+    }else{
+        const [rows]=await db.query("SELECT * FROM `product_list` WHERE `p_cate` =?", [req.body.productCate]);
+        res.json(rows);
+    }
+})
+
+
+//step3：分類+分頁
+// app.post('/mainproductcate', async(req, res)=>{
+//     // const perPage = 9; 
+//     // const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list` ");
+
+//     // const totalRows = t_rows[0].num;
+//     // console.log('hi',totalRows);
+//     // const totalPages = Math.ceil(totalRows / perPage);
+
+//     // let page = parseInt(req.query.page) || 1; //沒有的時候就得到1
+
+//     // //限定page的合理範圍
+//     // let rows = [];
+//     // if (totalRows > 0) {
+//     //     if (page < 1)
+//     //         return res.redirect('/product_list/list');
+//     //     //若走到此行，則不會再進行此行以下的指令
+
+//     //     if (page > totalPages)
+//     //         return res.redirect(`/product_list/list?page=${totalPages}`);
+
+
+//     //     [rows] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]); //LIMIT ? ?：資料的索引值/上限值
+
+       
+//     // return {
+//     //     perPage,
+//     //     totalRows,
+//     //     totalPages,
+//     //     page,
+//     //     rows,
+//     // }
+
+//     // }
+//     console.log("測試",req.body)
+//     if(req.body.productCate==1) {
+
+// //nowpage
+
+// //per page 9
+
+// //totalrows 51
+
+// //total page = 5
+
+// //limit from ? to ?
+
+//         const [rows]=await db.query("SELECT * FROM `product_list` LIMIT ?, ?",[ req.body.page - 1, 9]);
+//         res.json(rows);
+//     }else{
+
+//         //(page-1) *9 起始值
+
+//         const [rows]=await db.query("SELECT * FROM `product_list` WHERE `p_cate` =? LIMIT ?, ?",[req.body.productCate, req.body.page - 1, 9]);
+//         res.json(rows);
+//     }
+// })
+
+
+//商品詳細頁
+app.post('/mainproductdetail', upload.none(), async(req, res)=>{
+    console.log("測試",req.body)
+    const [rows]=await db.query("SELECT * FROM `product_list` WHERE p_sid=?",[req.body.productSid]);
+    res.json(rows);
+})
+
+//分頁
+
 
 //---------↑  Kris  商品區--------------------
 
@@ -403,10 +527,13 @@ app.use('/studioIntro1', async(req, res)=>{
       res.json(rows)})
 
 app.post('/studiorent', async(req, res)=>{ 
-    const classroom=req.body 
+    const classroom=req.body.textInput;
+    console.log('classroom', classroom);
     const [rows] = await db.query("SELECT * FROM `orders3` WHERE `designated_date`=?",[classroom]);
-    console.log([rows])})
-//  res.json(rows)})  
+    console.log('rows',[rows]);
+    res.json(rows);
+})
+
 
 
 
@@ -426,12 +553,6 @@ app.post('/studiorent', async(req, res)=>{
 
 
 
-
-    
-
-
-
-
 //所有路由請放在404之前
 app.use((req, res)=>{
     res.type('text/plain');
@@ -445,6 +566,9 @@ app.listen(port, ()=>{
 
 
 
+
+
+//分頁
 // const listHandler = async (req) => {
 //     const perPage = 9; 
 //     const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list`");
@@ -467,11 +591,7 @@ app.listen(port, ()=>{
 
 //         [rows] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]); //LIMIT ? ?：資料的索引值/上限值
 
-//         // rows.forEach(item => {
-//         //     item.birthday = moment(item.birthday).format('YYYY-MM-DD'); 
-//         //     //將list.ejs中的生日格式做轉換
-//         // })
-//     }
+       
 //     return {
 //         perPage,
 //         totalRows,
@@ -480,4 +600,3 @@ app.listen(port, ()=>{
 //         rows,
 //     }
 // }
-
