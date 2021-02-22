@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-02-18 09:51:38
+-- 產生時間： 2021-02-22 15:15:19
 -- 伺服器版本： 10.4.17-MariaDB
 -- PHP 版本： 7.3.25
 
@@ -39,35 +39,8 @@ CREATE TABLE `order_items1` (
 --
 
 INSERT INTO `order_items1` (`sid`, `order_sid`, `p_sid`, `quantity`) VALUES
-(1, 4, 22, 1),
-(2, 4, 17, 2),
-(3, 4, 22, 1),
-(6, 9, 6, 1),
-(7, 9, 8, 2),
-(8, 9, 22, 1),
-(12, 11, 5, 2),
-(13, 11, 15, 1),
-(78, 63, 1, 1),
-(79, 63, 2, 2),
-(80, 63, 3, 3),
-(81, 63, 4, 4),
-(83, 65, 1, 5),
-(84, 65, 2, 5),
-(85, 65, 3, 6),
-(86, 65, 4, 6),
-(87, 66, 1, 1),
-(88, 66, 2, 1),
-(89, 66, 3, 2),
-(90, 66, 4, 12),
-(91, 67, 1, 1),
-(92, 67, 2, 1),
-(93, 68, 1, 10),
-(94, 0, 1, 10),
-(95, 0, 1, 10),
-(96, 0, 1, 10),
-(97, 0, 1, 10),
-(98, 0, 1, 10),
-(99, 0, 1, 5);
+(158, 194, 1, 8),
+(159, 194, 2, 7);
 
 --
 -- 已傾印資料表的索引
@@ -89,7 +62,7 @@ ALTER TABLE `order_items1`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_items1`
 --
 ALTER TABLE `order_items1`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
