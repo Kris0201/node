@@ -16,14 +16,12 @@ const db = require(__dirname + "/modules/db_connect2");
 const sessionStore = new MysqlStore({}, db);
 const app = express();
 // app.set('view engine', 'ejs');
-<<<<<<< HEAD
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(session({
     name: 'login_mid',
     secret: 'sdkjghoif39097894508tyighdsgkgiso',
-=======
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -31,7 +29,6 @@ app.use(
   session({
     name: "login_mid",
     secret: "sdkjghoif39097894508tyighdsgkgiso",
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
     saveUninitialized: false,
     resave: false,
     store: sessionStore,
@@ -42,7 +39,6 @@ app.use(
 );
 
 const corsOptions = {
-<<<<<<< HEAD
     credentials: true,
     origin: function (origin, cb) {
         console.log('origin:', origin);
@@ -65,7 +61,6 @@ app.use(function (req, res, next) {
     req.session._garbage = Date();
     req.session.touch();
     next();
-=======
   credentials: true,
   origin: function (origin, cb) {
     console.log("origin:", origin);
@@ -87,12 +82,10 @@ app.use(function (req, res, next) {
   req.session._garbage = Date();
   req.session.touch();
   next();
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 });
 // --------------------------------------------會員-----------------------------------------------------
 //寄 gmail 函式
 async function main(email, password) {
-<<<<<<< HEAD
 
     let testAccount = await nodemailer.createTestAccount();
     let transporter = nodemailer.createTransport({
@@ -182,7 +175,6 @@ app.post('/login', cors(corsOptions), async (req, res) => {
             })
             return
         }
-=======
   let testAccount = await nodemailer.createTestAccount();
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -213,7 +205,6 @@ function generatepass(plength) {
     temp += keylist.charAt(Math.floor(Math.random() * keylist.length));
   return temp;
 }
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 
 app.post("/forget", upload.none(), async (req, res) => {
   const password = generatepass(6);
@@ -280,7 +271,6 @@ app.post("/login", cors(corsOptions), async (req, res) => {
       });
       return;
     }
-<<<<<<< HEAD
 })
 
 app.post('/loginverify', async (req, res) => {
@@ -379,7 +369,6 @@ app.put('/edit', upload.none(), async (req, res) => {
             body: req.body,
             success: true,
         })
-=======
   }
 });
 
@@ -427,7 +416,6 @@ app.post("/register", upload.none(), async (req, res) => {
         body: req.body,
       });
       return;
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
     } else {
       const [rows2] = await db.query(
         "SELECT `email` FROM `member` WHERE email=?",
@@ -435,12 +423,10 @@ app.post("/register", upload.none(), async (req, res) => {
       );
       if (rows2.length === 1) {
         res.json({
-<<<<<<< HEAD
             error: "更新失敗",
             success: false,
             body: req.body
         })
-=======
           code: 2,
           error: "電子郵件重複",
           register: false,
@@ -462,12 +448,10 @@ app.post("/register", upload.none(), async (req, res) => {
           });
         }
       }
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
     }
   }
   // res.json({data})
 });
-<<<<<<< HEAD
 app.put('/editpassword', async (req, res) => {
     const token = jwt.verify(req.body.token, process.env.JWT_KEY);
 
@@ -496,7 +480,6 @@ app.put('/editpassword', async (req, res) => {
             update: false,
             body: req.body
         })
-=======
 
 app.put("/edit", upload.none(), async (req, res) => {
   console.log(req.body.birthday);
@@ -560,7 +543,6 @@ app.put("/editpassword", async (req, res) => {
         body: req.body,
         update: "error",
       });
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
     }
   } else {
     res.json({
@@ -570,7 +552,6 @@ app.put("/editpassword", async (req, res) => {
     });
   }
 });
-<<<<<<< HEAD
 app.post('/logout', (req, res) => {
     // req.session.destroy();
     delete req.session.user;
@@ -685,7 +666,6 @@ app.post('/Cart1Content1DecreaseQty', async (req, res) => {
         data.quantity -= check[0].quantity
         const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
         res.json(result || 'no')
-=======
 app.post("/logout", (req, res) => {
   // req.session.destroy();
   delete req.session.user;
@@ -777,7 +757,6 @@ app.post("/addfavactive", async (req, res) => {
         fav: false,
         body: req.body,
       });
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
     }
   } else {
     res.json({ fav: false });
@@ -838,7 +817,6 @@ app.get("/cart1items", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 app.post('/Cart1Content2', upload.none(), async (req, res) => {
     // const {name, email, mobile, birthday, address} = req.body;
     // const data = {name, email, mobile, birthday, address};
@@ -851,7 +829,6 @@ app.post('/Cart1Content2', upload.none(), async (req, res) => {
     //     success: result.changedRows===1
     // });
 })
-=======
 app.delete("/cart1items", async (req, res) => {
   const [result] = await db.query("DELETE FROM `cart1_items` WHERE p_sid=?", [
     req.body.p_sid,
@@ -860,7 +837,6 @@ app.delete("/cart1items", async (req, res) => {
     success: result.affectedRows === 1,
   });
 });
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 
 app.post("/Cart1Content1IncreaseQty", async (req, res) => {
   let { p_sid, quantity } = req.body;
@@ -944,7 +920,6 @@ app.post("/Cart1Content2", upload.none(), async (req, res) => {
 // })
 
 //step2：單純處理分類
-<<<<<<< HEAD
 app.post('/mainproductcate', async (req, res) => {
     console.log("測試", req.body)
     if (req.body.productCate == 1) {
@@ -1010,7 +985,6 @@ app.get('/mainproductcate2', async (req, res) => {
 
 })
 
-=======
 app.post("/mainproductcate", async (req, res) => {
   console.log("測試", req.body);
   if (req.body.productCate == 1) {
@@ -1025,18 +999,14 @@ app.post("/mainproductcate", async (req, res) => {
     res.json(rows);
   }
 });
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 
 
 //step3：分類+分頁
 // app.post('/mainproductcate', async(req, res)=>{
-<<<<<<< HEAD
 //     // const perPage = 9; 
 //     // const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list` "); //此行在MySQL中執行會得到50(筆)結果
-=======
 //     // const perPage = 9;
 //     // const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list` ");
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 
 //     // const totalRows = t_rows[0].num;
 //     // console.log('hi',totalRows);
@@ -1056,10 +1026,7 @@ app.post("/mainproductcate", async (req, res) => {
 
 //     //     [rows] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]); //LIMIT ? ?：資料的索引值/上限值
 
-<<<<<<< HEAD
 
-=======
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 //     // return {
 //     //     perPage,
 //     //     totalRows,
@@ -1093,13 +1060,11 @@ app.post("/mainproductcate", async (req, res) => {
 // })
 
 //商品詳細頁
-<<<<<<< HEAD
 app.post('/mainproductdetail', upload.none(), async (req, res) => {
     console.log("測試", req.body)
     const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid=?", [req.body.productSid]);
     res.json(rows);
 })
-=======
 app.post("/mainproductdetail", upload.none(), async (req, res) => {
   console.log("測試", req.body);
   const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid=?", [
@@ -1107,7 +1072,6 @@ app.post("/mainproductdetail", upload.none(), async (req, res) => {
   ]);
   res.json(rows);
 });
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 
 //分頁
 
@@ -1123,7 +1087,6 @@ app.post("/campaignProductInfo", upload.none(), async (req, res) => {
   res.json(rows);
 });
 
-<<<<<<< HEAD
 //---------------------------------------------------------------教室租借--------------------
 
 app.use('/studioIntro1', async (req, res) => {
@@ -1138,7 +1101,6 @@ app.post('/studiorent', async (req, res) => {
     console.log('rows', [rows]);
     res.json(rows);
 })
-=======
 app.post("/search", upload.none(), async (req, res) => {
   console.log("傳進來的搜尋資料", req.body);
   const [
@@ -1148,7 +1110,6 @@ app.post("/search", upload.none(), async (req, res) => {
   ]);
   res.json(rows);
 });
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 
 app.use("/campaignlist", async (req, res) => {
   const [rows] = await db.query(
@@ -1184,7 +1145,6 @@ app.post("/studiorent", async (req, res) => {
 // res.json({
 //     success: result.changedRows===1
 // });
-<<<<<<< HEAD
 
 
 
@@ -1206,7 +1166,6 @@ app.listen(port, () => {
 
 
 
-=======
 
 //所有路由請放在404之前
 app.use((req, res) => {
@@ -1218,7 +1177,6 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`port: ${port}`, new Date());
 });
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 
 //分頁
 // const listHandler = async (req) => {
@@ -1242,10 +1200,7 @@ app.listen(port, () => {
 
 //         [rows] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]); //LIMIT ? ?：資料的索引值/上限值
 
-<<<<<<< HEAD
 
-=======
->>>>>>> bf58cc7e4394a22937b96fe5df6594067063d4d1
 //     return {
 //         perPage,
 //         totalRows,
