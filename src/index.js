@@ -236,14 +236,15 @@ app.post('/register', upload.none(), async (req, res) => {
   })
   
 app.put('/edit', upload.none() , async(req,res) => {
+    console.log(req.body.birthday)
+    console.log(moment.utc(req.body.birthday).local().format('YYYY-MM-DD'))
+
     const {username, tel, email, address, birthday} = req.body;
-    const data = {username, tel, email, address, birthday};
+    const data = {username, tel, email, address, birthday:moment.utc(req.body.birthday).local().format('YYYY-MM-DD')};
     const token = jwt.verify(req.body.token, process.env.JWT_KEY);
     console.log(token.mid)
     const [rows] = await db.query( "UPDATE `member` SET ? WHERE mid = ?",[data,token.mid])
-    // res.json({
-    //     success: rows.changedRows===1
-    // });
+
     if(rows.changedRows===1){
         res.json({
             body: req.body,
@@ -329,6 +330,57 @@ app.post('/addfavproduct',async(req,res)=>{
     }
 })
 app.delete('/deletefavproduct',async(req,res)=>{
+    const [rows] = await db.query("DELETE FROM `fav-product` WHERE p_sid = ?",[req.body.p_sid])
+ console.log(req.body.p_sid)
+ console.log(req.body)
+    if (rows.affectedRows === 1) {
+        res.json({
+            code:1,
+          delete: '刪除成功',
+          body: req.body,
+        })
+      } else {
+        res.json({
+            delete: false,
+          body: req.body,
+        })
+      }
+})
+app.get('/getfavactive',async(req,res)=>{
+    const [rows] = await db.query("SELECT * FROM `fav-product` ")
+    if(rows.length){ 
+        res.json(
+        rows,
+      )
+    }
+      else{ 
+        res.json({
+        fav: "none",
+        body: rows,
+      })
+    }
+})
+app.post('/addfavactive',async(req,res)=>{
+    const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid = ?",[req.body.p_sid])
+    if(rows.length===1){
+        const [result] = await db.query('INSERT INTO `fav-product` set ?',[{...rows[0]}])
+        if (result.affectedRows === 1) {
+            res.json({
+              fav: '收藏成功',
+              body: req.body,
+            })
+          } else {
+            res.json({
+              fav: false,
+              body: req.body,
+            })
+          }
+    }
+    else{
+        res.json({fav:false})
+    }
+})
+app.delete('/deletefavactive',async(req,res)=>{
     const [rows] = await db.query("DELETE FROM `fav-product` WHERE p_sid = ?",[req.body.p_sid])
  console.log(req.body.p_sid)
  console.log(req.body)
