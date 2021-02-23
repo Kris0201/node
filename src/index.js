@@ -64,8 +64,8 @@ async function main(email,password) {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: 'drunkencake.topic@gmail.com',
-      pass:'drunkencake',
+      user: 'dcaketopic@gmail.com',
+      pass:'x04yjo4204el',
     },
   });
   let info = await transporter.sendMail({
@@ -295,6 +295,22 @@ res.json({
       logout : true,
   });
 })
+app.post('/getorderproduct',async(req,res)=>{
+  const token = jwt.verify(req.body.mid, process.env.JWT_KEY);
+
+  const [rows] = await db.query("SELECT * FROM `orders1` WHERE mid =?",[token.mid])
+  if(rows.length){ 
+      res.json(
+      rows,
+    )
+  }
+    else{ 
+      res.json({
+      fav: "none",
+      body: rows,
+    })
+  }
+})
 app.get('/getfavproduct',async(req,res)=>{
   const [rows] = await db.query("SELECT * FROM `fav-product` ")
   if(rows.length){ 
@@ -397,7 +413,38 @@ console.log(req.body)
       })
     }
 })
-app.get('/member-order')
+app.post('/member-order',async(req,res)=>{
+  // const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+console.log("sid : "+req.body.sid)
+const [rows] = await db.query("SELECT * FROM `order_items1` JOIN `orders1` ON `orders1`.`sid` =? JOIN `product_list` ON `product_list`.`p_sid` = `order_items1`.`p_sid` WHERE `order_items1`.`order_sid` = ?", [req.body.sid,req.body.sid]);
+  if(rows.length){ 
+    res.json(
+    rows
+  )
+}
+  else{ 
+    res.json({
+    orders: "none",
+    body: rows,
+  })
+}
+})
+app.get('/member-order2',async(req,res)=>{
+  // const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+console.log("sid : "+req.body.sid)
+const [rows2] = await db.query("SELECT * FROM `orders1` WHERE `sid` =? ", [req.body.sid]);
+  if(rows2.length){ 
+    res.json(
+    rows2
+  )
+}
+  else{ 
+    res.json({
+    orders: "none",
+    body: rows,
+  })
+}
+})
 // ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
