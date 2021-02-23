@@ -449,9 +449,11 @@ const [rows2] = await db.query("SELECT * FROM `orders1` WHERE `sid` =? ", [req.b
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
     // res.json(rows[0] || 'no')
+    const token = jwt.verify(req.body.token, process.env.JWT_KEY);
 
     let {p_sid, quantity} = req.body;
-    let data = {p_sid, quantity}
+    let data = {p_sid, quantity};
+    data.mid = token.mid;
     let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
     const index = check.findIndex((value) => value.p_sid===data.p_sid)
     if (index !== -1) {
@@ -509,7 +511,7 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
 // 3.建立orders1
 app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     const inputsAlot = {...req.body};
-    console.log('收到' + req.body);
+    console.log('收到' , inputsAlot);
     const [cart] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid])
     let CartTotal = 0
     cart.forEach((item) => {
@@ -527,7 +529,7 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
 
 
     
-    let order_items1 = {}
+    
     cart.forEach((item,index) => {
         let order_items1 = {}
         order_items1.order_sid = result1.insertId
@@ -549,10 +551,11 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
 })
 
 app.get('/cart1Thanks',async(req,res)=>{
-    console.log('this is from cart1Thanks ' + req.session.lastInsertId)
-    console.log('this is mid ' + req.session.user.mid)
+    // console.log('this is from cart1Thanks ' + req.session.lastInsertId)
+    // console.log('this is mid ' + req.session.user.mid)
     const fm = 'YYYY-MM-DD';
-    const [orders1] = await db.query("SELECT * FROM `orders1` WHERE `orders1`.`mid` = ? AND `sid` = ?", [req.session.user.mid, req.session.lastInsertId])
+    const [orders1] = await db.query("SELECT * FROM `orders1` JOIN `order_items1` ON `orders`.`sid` = `order_items1`.`order_sid` WHERE `orders1`.`mid` = ? AND `sid` = ?", [req.session.user.mid, req.session.lastInsertId])
+
     const orders2 = {...orders1[0]}
     orders2.designated_date = moment(orders2.designated_date).tz('Asia/Taipei').format(fm)
     console.log(orders2)
