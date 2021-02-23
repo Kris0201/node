@@ -397,6 +397,8 @@ app.delete('/deletefavactive',async(req,res)=>{
         })
       }
 })
+app.get('/member-order')
+
 // ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
