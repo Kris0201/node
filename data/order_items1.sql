@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-02-22 15:15:19
+-- 產生時間： 2021-02-23 11:24:53
 -- 伺服器版本： 10.4.17-MariaDB
 -- PHP 版本： 7.3.25
 
@@ -39,8 +39,8 @@ CREATE TABLE `order_items1` (
 --
 
 INSERT INTO `order_items1` (`sid`, `order_sid`, `p_sid`, `quantity`) VALUES
-(158, 194, 1, 8),
-(159, 194, 2, 7);
+(274, 255, 1, 8),
+(275, 255, 2, 7);
 
 --
 -- 已傾印資料表的索引
@@ -62,7 +62,7 @@ ALTER TABLE `order_items1`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_items1`
 --
 ALTER TABLE `order_items1`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=276;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

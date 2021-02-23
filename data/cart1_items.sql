@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-02-18 09:51:04
+-- 產生時間： 2021-02-23 11:24:38
 -- 伺服器版本： 10.4.17-MariaDB
 -- PHP 版本： 7.3.25
 
@@ -39,8 +39,8 @@ CREATE TABLE `cart1_items` (
 --
 
 INSERT INTO `cart1_items` (`sid`, `mid`, `p_sid`, `quantity`) VALUES
-(101, 0, 1, 5),
-(126, 0, 3, 7);
+(101, 84, 1, 8),
+(128, 84, 2, 7);
 
 --
 -- 已傾印資料表的索引
@@ -62,7 +62,7 @@ ALTER TABLE `cart1_items`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart1_items`
 --
 ALTER TABLE `cart1_items`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

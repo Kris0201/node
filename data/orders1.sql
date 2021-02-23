@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-02-22 15:15:27
+-- 產生時間： 2021-02-23 11:24:46
 -- 伺服器版本： 10.4.17-MariaDB
 -- PHP 版本： 7.3.25
 
@@ -56,7 +56,7 @@ CREATE TABLE `orders1` (
 --
 
 INSERT INTO `orders1` (`sid`, `mid`, `amount`, `receiver`, `receiverMobile`, `address`, `order_date`, `order_state`, `designated_date`, `designated_period`, `deliver_state`, `payment_type`, `username`, `tel`, `pan_no1`, `pan_no2`, `pan_no3`, `pan_no4`, `creditCardExpireMonth`, `creditCardExpireYear`, `creditCardBack`) VALUES
-(194, 84, 8350, '王壹粒', '1234567890', '台北市中正區重慶南路一段122號', '2021-02-22 15:14:00', '訂單成立', '2021-02-28', 'afternoon', '備貨中', 'CreditCard', '令合的令', '0987654321', '1111', '2222', '3333', '4444', '10', '2021', '777');
+(255, 84, 8350, '1111', '1111', '1111', '2021-02-23 11:06:16', '訂單成立', '2021-03-01', '8:00-12:00', '備貨中', '信用卡一次付清', '1111', '1111', '1111', '1111', '1111', '1111', '1', '2021', '111');
 
 --
 -- 已傾印資料表的索引
@@ -76,7 +76,7 @@ ALTER TABLE `orders1`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `orders1`
 --
 ALTER TABLE `orders1`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=256;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
