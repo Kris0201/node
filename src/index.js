@@ -399,95 +399,62 @@ console.log(req.body)
 })
 app.get('/member-order')
 // ------------------------------------------------購物車--------------------------------------------------------
-app.post("/AddToCart1", async (req, res) => {
-  // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
-  // res.json(rows[0] || 'no')
+app.post('/AddToCart1', async(req, res)=>{
+    // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
+    // res.json(rows[0] || 'no')
 
-  let { p_sid, quantity } = req.body;
-  let data = { p_sid, quantity };
-  let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [
-    p_sid,
-  ]);
-  const index = check.findIndex((value) => value.p_sid === data.p_sid);
-  if (index !== -1) {
-    data.quantity += check[0].quantity;
-    const [result] = await db.query(
-      "UPDATE `cart1_items` SET ? WHERE p_sid=?",
-      [data, p_sid]
-    );
-    res.json(result || "no");
-  } else {
-    const [result] = await db.query("INSERT INTO `cart1_items` SET ?", [data]);
-    res.json(result || "no");
-  }
-});
-
-app.get("/cart1items", async (req, res) => {
-  if (req.session.user.mid) {
-    const [
-      rows,
-    ] = await db.query(
-      "SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?",
-      [req.session.user.mid]
-    );
-    res.json(rows);
-  }
-});
-
-app.post('/Cart1Content2', upload.none(), async (req, res) => {
-    // const {name, email, mobile, birthday, address} = req.body;
-    // const data = {name, email, mobile, birthday, address};
-    const inputsAlot = { ...req.body };
-    console.log(inputsAlot)
-    const [result] = await db.query("UPDATE `address_book` SET ? WHERE sid=?", [data, req.params.sid]);
-    // // affectedRows, changedRows
-    // // 有沒有修改成功要看changedRows， 可以再network preview看到
-    // res.json({
-    //     success: result.changedRows===1
-    // });
+    let {p_sid, quantity} = req.body;
+    let data = {p_sid, quantity}
+    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
+    const index = check.findIndex((value) => value.p_sid===data.p_sid)
+    if (index !== -1) {
+        data.quantity += check[0].quantity
+        const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
+        res.json(result || 'no')
+    } else{
+        const [result] = await db.query("INSERT INTO `cart1_items` SET ?", [data]);
+        res.json(result || 'no')
+    }  
 })
-app.delete("/cart1items", async (req, res) => {
-  const [result] = await db.query("DELETE FROM `cart1_items` WHERE p_sid=?", [
-    req.body.p_sid,
-  ]);
-  res.json({
-    success: result.affectedRows === 1,
-  });
-});
 
-app.post("/Cart1Content1IncreaseQty", async (req, res) => {
-  let { p_sid, quantity } = req.body;
-  let data = { p_sid, quantity };
-  let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [
-    p_sid,
-  ]);
-  const index = check.findIndex((value) => value.p_sid === p_sid);
-  if (index !== -1) {
-    data.quantity += check[0].quantity;
-    const [result] = await db.query(
-      "UPDATE `cart1_items` SET ? WHERE p_sid=?",
-      [data, p_sid]
-    );
-    res.json(result || "no");
-  }
-});
+app.get('/cart1items', async(req, res)=>{
 
-app.post("/Cart1Content1DecreaseQty", async (req, res) => {
-  let { p_sid, quantity } = req.body;
-  let data = { p_sid, quantity };
-  let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [
-    p_sid,
-  ]);
-  const index = check.findIndex((value) => value.p_sid === p_sid);
-  if (index !== -1) {
-    data.quantity -= check[0].quantity;
-    const [result] = await db.query(
-      "UPDATE `cart1_items` SET ? WHERE p_sid=?",
-      [data, p_sid]
-    );
-    res.json(result || "no");
-  }
-});
+    if(req.session.user.mid){
+        const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
+    res.json(rows)}
+    
+})
+
+app.delete('/cart1items', async(req, res)=>{
+    const [result] = await db.query("DELETE FROM `cart1_items` WHERE p_sid=?", [ req.body.p_sid ]);
+    res.json({
+        success: result.affectedRows===1
+    });
+})
+
+app.post('/Cart1Content1IncreaseQty', async(req, res)=>{
+    let {p_sid, quantity} = req.body;
+    let data = {p_sid, quantity}
+    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
+    const index = check.findIndex((value) => value.p_sid===p_sid)
+    if (index !== -1) {
+        data.quantity += check[0].quantity
+        const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
+        res.json(result || 'no')
+    }
+})
+
+app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
+    let {p_sid, quantity} = req.body;
+    let data = {p_sid, quantity}
+    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
+    const index = check.findIndex((value) => value.p_sid===p_sid)
+    if (index !== -1) {
+        data.quantity -= check[0].quantity
+        const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
+        res.json(result || 'no')
+    }
+})
 
 // 直接在後端做加總處理，不要在前端做
 // 1.清空cartItems
@@ -540,9 +507,10 @@ app.get('/cart1Thanks',async(req,res)=>{
     const fm = 'YYYY-MM-DD';
     const [orders1] = await db.query("SELECT * FROM `orders1` WHERE `orders1`.`mid` = ? AND `sid` = ?", [req.session.user.mid, req.session.lastInsertId])
     const orders2 = {...orders1[0]}
+    orders2.designated_date = moment(orders2.designated_date).tz('Asia/Taipei').format(fm)
     console.log(orders2)
     // orders2.designated_date = orders2.designated_date.format(fm)
-    res.json(moment(orders2.designated_date).tz('Asia/Taipei').format(fm))
+    res.json(orders2)
 
     // res.json(orders2)
 }) 
