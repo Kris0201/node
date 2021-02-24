@@ -341,4 +341,19 @@ app.delete('/deletefavactive',async(req,res)=>{
         })
       }
 })
-app.get('/member-order')
+app.post('/member-order',async(req,res)=>{
+  // const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+console.log("sid : "+req.body.sid)
+const [rows] = await db.query("SELECT * FROM `order_items1` JOIN `orders1` ON `orders1`.`sid` =? JOIN `product_list` ON `product_list`.`p_sid` = `order_items1`.`p_sid` WHERE `order_items1`.`order_sid` = ?", [req.body.sid,req.body.sid]);
+  if(rows.length){ 
+    res.json(
+    rows
+  )
+}
+  else{ 
+    res.json({
+    orders: "none",
+    body: rows,
+  })
+}
+})

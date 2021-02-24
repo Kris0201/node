@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-02-18 10:10:21
+-- 產生時間： 2021-02-24 16:50:36
 -- 伺服器版本： 10.4.16-MariaDB
 -- PHP 版本： 7.3.24
 
@@ -45,7 +45,9 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`mid`, `username`, `account`, `password`, `email`, `address`, `birthday`, `tel`, `pic`, `created_at`) VALUES
-(84, 'fish', 'fish', '1234', 'aaaadfs@fefff.com', '台北市', '2021-02-09', '0915234155', '5fe549d52e3df.jpg', '2020-12-18 09:51:06');
+(84, 'fish', 'fish', '123456', 'spe9g0908@gmail.com', '台北市', '1987-01-22', '0915115144', '5fe549d52e3df.jpg', '2020-12-18 09:51:06'),
+(143, '王一明', 'ffff', '123456', '1111@gmaul.com', '台北市', '1970-01-03', '0915115144', NULL, '0000-00-00 00:00:00'),
+(144, '王一明', 'abcd', '123456', '11113@gmaul.com', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00');
 
 --
 -- 已傾印資料表的索引
@@ -66,7 +68,7 @@ ALTER TABLE `member`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `member`
 --
 ALTER TABLE `member`
-  MODIFY `mid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `mid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

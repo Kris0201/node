@@ -89,8 +89,8 @@ function generatepass(plength){
   return temp
   }
 
-app.post('/forget',upload.none(),async(req,res)=>{
-  const password =generatepass(6)
+app.post('/forget',async(req,res)=>{
+  const password =   generatepass(6)  
   const [rows] = await db.query( "UPDATE `member` SET `password`=? WHERE email = ?",[password,req.body.email])
   if(rows.changedRows===1){
    main(req.body.email,password).catch(console.error);
@@ -114,16 +114,12 @@ app.post('/login', cors(corsOptions),async(req,res)=>{
   if(rows.length===1)
   {
       req.session.user = rows[0];
-      // app.locals.account = rows[0].account
-      // app.locals.password = rows[0].password
       mid = rows[0].mid
       const token = jwt.sign({mid}, process.env.JWT_KEY);
       res.json({
           success: true,
           body: rows[0],
           token,
-         account :res.locals.account,
-          password :res.locals.password,
       })
   }   
   else {
@@ -429,22 +425,7 @@ const [rows] = await db.query("SELECT * FROM `order_items1` JOIN `orders1` ON `o
   })
 }
 })
-app.get('/member-order2',async(req,res)=>{
-  // const token = jwt.verify(req.body.token, process.env.JWT_KEY);
-console.log("sid : "+req.body.sid)
-const [rows2] = await db.query("SELECT * FROM `orders1` WHERE `sid` =? ", [req.body.sid]);
-  if(rows2.length){ 
-    res.json(
-    rows2
-  )
-}
-  else{ 
-    res.json({
-    orders: "none",
-    body: rows,
-  })
-}
-})
+
 // ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
