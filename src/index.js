@@ -64,8 +64,8 @@ async function main(email,password) {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: 'drunkencake.topic@gmail.com',
-      pass:'drunkencake',
+      user: 'dcaketopic@gmail.com',
+      pass:'x04yjo4204el',
     },
   });
   let info = await transporter.sendMail({
@@ -295,6 +295,22 @@ res.json({
       logout : true,
   });
 })
+app.post('/getorderproduct',async(req,res)=>{
+  const token = jwt.verify(req.body.mid, process.env.JWT_KEY);
+
+  const [rows] = await db.query("SELECT * FROM `orders1` WHERE mid =?",[token.mid])
+  if(rows.length){ 
+      res.json(
+      rows,
+    )
+  }
+    else{ 
+      res.json({
+      fav: "none",
+      body: rows,
+    })
+  }
+})
 app.get('/getfavproduct',async(req,res)=>{
   const [rows] = await db.query("SELECT * FROM `fav-product` ")
   if(rows.length){ 
@@ -397,15 +413,50 @@ console.log(req.body)
       })
     }
 })
-app.get('/member-order')
+app.post('/member-order',async(req,res)=>{
+  // const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+console.log("sid : "+req.body.sid)
+const [rows] = await db.query("SELECT * FROM `order_items1` JOIN `orders1` ON `orders1`.`sid` =? JOIN `product_list` ON `product_list`.`p_sid` = `order_items1`.`p_sid` WHERE `order_items1`.`order_sid` = ?", [req.body.sid,req.body.sid]);
+  if(rows.length){ 
+    res.json(
+    rows
+  )
+}
+  else{ 
+    res.json({
+    orders: "none",
+    body: rows,
+  })
+}
+})
+app.get('/member-order2',async(req,res)=>{
+  // const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+console.log("sid : "+req.body.sid)
+const [rows2] = await db.query("SELECT * FROM `orders1` WHERE `sid` =? ", [req.body.sid]);
+  if(rows2.length){ 
+    res.json(
+    rows2
+  )
+}
+  else{ 
+    res.json({
+    orders: "none",
+    body: rows,
+  })
+}
+})
 // ------------------------------------------------購物車--------------------------------------------------------
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
     // res.json(rows[0] || 'no')
+    const token = jwt.verify(req.body.token, process.env.JWT_KEY);
 
     let {p_sid, quantity} = req.body;
-    let data = {p_sid, quantity}
-    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
+    let data = {p_sid, quantity};
+    data.mid = token.mid;
+    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE mid=?", [data.mid])
+    console.log(check)
+    // let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
     const index = check.findIndex((value) => value.p_sid===data.p_sid)
     if (index !== -1) {
         data.quantity += check[0].quantity
@@ -462,7 +513,7 @@ app.post('/Cart1Content1DecreaseQty', async(req, res)=>{
 // 3.建立orders1
 app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     const inputsAlot = {...req.body};
-    console.log('收到' + req.body);
+    // console.log('收到' , inputsAlot);
     const [cart] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid])
     let CartTotal = 0
     cart.forEach((item) => {
@@ -473,27 +524,22 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
     inputsAlot.order_date = new Date();
     inputsAlot.amount = CartTotal;
     const [result1] = await db.query("INSERT INTO `orders1` SET ?", [inputsAlot]); 
-    console.log('前端來的 ' + inputsAlot)
-    console.log('這筆交易單號 ' + result1.insertId)
+    // console.log('前端來的 ' + inputsAlot)
+    // console.log('這筆交易單號 ' + result1.insertId)
     req.session.lastInsertId = result1.insertId
-    console.log('把交易單號傳給session ' + req.session.lastInsertId)
-
-
+    // console.log('把交易單號傳給session ' + req.session.lastInsertId)
     
-    let order_items1 = {}
     cart.forEach((item,index) => {
         let order_items1 = {}
         order_items1.order_sid = result1.insertId
         order_items1.p_sid = item.p_sid
         order_items1.quantity = item.quantity
         db.query("INSERT INTO `order_items1` SET ?", [order_items1])
-
-        
-        // order_items1.order_sid = result1.insertId
-        // order_items1.items += {p_sid:item.p_sid, quantity:item.quantity } 
-        
-        
     });
+    
+
+    const [delCart] = await db.query("DELETE FROM `cart1_items` WHERE mid=?", [ req.session.user.mid]);
+
     res.json(result1.insertId)
     
     // const[result2] = await db.query("INSERT INTO `order_items1`"); 
@@ -502,17 +548,19 @@ app.post('/Cart1Content2', upload.none(), async (req, res)=>{
 })
 
 app.get('/cart1Thanks',async(req,res)=>{
-    console.log('this is from cart1Thanks ' + req.session.lastInsertId)
-    console.log('this is mid ' + req.session.user.mid)
+    // console.log('this is from cart1Thanks ' + req.session.lastInsertId)
+    // console.log('this is mid ' + req.session.user.mid)
     const fm = 'YYYY-MM-DD';
-    const [orders1] = await db.query("SELECT * FROM `orders1` WHERE `orders1`.`mid` = ? AND `sid` = ?", [req.session.user.mid, req.session.lastInsertId])
-    const orders2 = {...orders1[0]}
-    orders2.designated_date = moment(orders2.designated_date).tz('Asia/Taipei').format(fm)
-    console.log(orders2)
-    // orders2.designated_date = orders2.designated_date.format(fm)
-    res.json(orders2)
+    const [orders1] = await db.query("SELECT * FROM `order_items1` JOIN `orders1` ON `order_items1`.`order_sid` = `orders1`.`sid` JOIN `product_list` ON `product_list`.`p_sid` = `order_items1`.`p_sid` WHERE `orders1`.`mid` = ? AND `orders1`.`sid` = ?", [req.session.user.mid, req.session.lastInsertId])
 
-    // res.json(orders2)
+    // const orders2 = {...orders1}
+    // const orders2 = {...orders1[0]}
+    // orders2.designated_date = moment(orders2.designated_date).tz('Asia/Taipei').format(fm)
+    // console.log(orders2)
+    // orders2.designated_date = orders2.designated_date.format(fm)
+    // res.json(orders1)
+
+    res.json(orders1)
 }) 
 
 
