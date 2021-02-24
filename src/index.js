@@ -457,6 +457,7 @@ app.get('/cart1items', async(req, res)=>{
 
     if(req.session.user.mid){
         const [rows] = await db.query("SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?", [req.session.user.mid]);
+        console.log(rows)
     res.json(rows)}
     
 })
@@ -547,6 +548,68 @@ app.get('/cart1Thanks',async(req,res)=>{
 
     res.json(orders1)
 }) 
+
+app.get('/cartActivityItems', async(req, res)=>{
+  if(req.session.user.mid){
+      const [rows] = await db.query("SELECT * FROM `cart_activity` JOIN `campaign_prodduct` ON `cart_activity`.`p_sid` = `campaign_prodduct`.`sid` WHERE `cart_activity`.`mid` = ?", [req.session.user.mid]);
+      console.log(rows);
+      res.json(rows)}
+})
+
+app.post('/AddToCartActivity', async(req, res)=>{
+  if(req.body.token){
+    const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+    let {p_sid, quantity} = req.body;
+    let data = {p_sid, quantity};
+    data.mid = token.mid;
+    let [check] = await db.query("SELECT * FROM `cart_activity` WHERE mid=?", [data.mid])
+    console.log(check)
+    const index = check.findIndex((value) => value.p_sid===data.p_sid)
+    if (index !== -1) {
+        data.quantity += check[0].quantity
+        const [result] = await db.query("UPDATE `cart_activity` SET ? WHERE p_sid=?", [data, p_sid]);
+        res.json(result || 'no')
+    } else{
+        const [result] = await db.query("INSERT INTO `cart_activity` SET ?", [data]);
+        res.json(result || 'no')
+    }  
+
+  } else {
+    res.json('error')}
+  
+})
+
+app.get('/cartStudioItems', async(req, res)=>{
+  if(req.session.user.mid){
+      const [rows] = await db.query("SELECT * FROM `cart_studio` JOIN `studio_product` ON `cart_studio`.`studio_id` = `studio_product`.`studio_id`  WHERE `cart_studio`.`mid` = ?", [144]);
+      console.log(rows);
+      res.json(rows)}
+      
+})
+
+app.post('/AddToCartStudio', async(req, res)=>{
+  if(req.body.token){
+    const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+    let {studio_id, date, time_period, price} = req.body;
+    let data = {studio_id, date, time_period, price};
+    data.mid = token.mid;
+    let [check] = await db.query("SELECT * FROM `cart_studio` WHERE mid=?", [data.mid])
+    const index = check.findIndex((value) => value.studio_id===data.studio_id)
+    if (index !== -1) {
+        // data.quantity += check[0].quantity
+        // const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
+        console.log('已經在購物車了')
+        res.json('error')
+    } else{
+        const [result] = await db.query("INSERT INTO `cart_studio` SET ?", [data]);
+        console.log(result)
+        res.json(result)
+    }  
+
+  } else {
+    res.json('error')}
+  
+})
 
 
 
