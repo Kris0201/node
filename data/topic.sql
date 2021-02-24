@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-02-24 17:01:40
+-- 產生時間： 2021-02-24 17:19:48
 -- 伺服器版本： 10.4.17-MariaDB
 -- PHP 版本： 7.3.25
 
@@ -75,14 +75,6 @@ CREATE TABLE `cart1_items` (
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 傾印資料表的資料 `cart1_items`
---
-
-INSERT INTO `cart1_items` (`sid`, `mid`, `p_sid`, `quantity`) VALUES
-(101, 84, 1, 8),
-(128, 84, 2, 7);
-
 -- --------------------------------------------------------
 
 --
@@ -146,6 +138,7 @@ CREATE TABLE `orders1` (
   `sid` int(11) NOT NULL,
   `mid` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
+  `freight` int(11) NOT NULL,
   `receiver` varchar(255) NOT NULL,
   `receiverMobile` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
@@ -153,6 +146,7 @@ CREATE TABLE `orders1` (
   `order_state` varchar(255) DEFAULT '訂單成立',
   `designated_date` date DEFAULT NULL,
   `designated_period` varchar(255) DEFAULT '不指定',
+  `delivery` varchar(10) NOT NULL,
   `deliver_state` varchar(255) NOT NULL DEFAULT '備貨中',
   `payment_type` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
@@ -166,13 +160,6 @@ CREATE TABLE `orders1` (
   `creditCardBack` varchar(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 傾印資料表的資料 `orders1`
---
-
-INSERT INTO `orders1` (`sid`, `mid`, `amount`, `receiver`, `receiverMobile`, `address`, `order_date`, `order_state`, `designated_date`, `designated_period`, `deliver_state`, `payment_type`, `username`, `tel`, `pan_no1`, `pan_no2`, `pan_no3`, `pan_no4`, `creditCardExpireMonth`, `creditCardExpireYear`, `creditCardBack`) VALUES
-(255, 84, 8350, '1111', '1111', '1111', '2021-02-23 11:06:16', '訂單成立', '2021-03-01', '8:00-12:00', '備貨中', '信用卡一次付清', '1111', '1111', '1111', '1111', '1111', '1111', '1', '2021', '111');
-
 -- --------------------------------------------------------
 
 --
@@ -185,14 +172,6 @@ CREATE TABLE `order_items1` (
   `p_sid` int(11) NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 傾印資料表的資料 `order_items1`
---
-
-INSERT INTO `order_items1` (`sid`, `order_sid`, `p_sid`, `quantity`) VALUES
-(274, 255, 1, 8),
-(275, 255, 2, 7);
 
 -- --------------------------------------------------------
 
@@ -300,6 +279,26 @@ INSERT INTO `product_list` (`p_sid`, `p_name`, `p_cate`, `p_size`, `p_price`, `p
 -- --------------------------------------------------------
 
 --
+-- 資料表結構 `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `session_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `expires` int(11) UNSIGNED NOT NULL,
+  `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- 傾印資料表的資料 `sessions`
+--
+
+INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
+('Bu2O9QjfWk2zi8CwnIwsn4MuINhur_Lk', 1614338071, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-26T11:14:30.758Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Feb 24 2021 17:14:30 GMT+0800 (台北標準時間)\",\"user\":{\"mid\":84,\"username\":\"fish\",\"account\":\"fish\",\"password\":\"123456\",\"email\":\"spe9g0908@gmail.com\",\"address\":\"台北市\",\"birthday\":\"1987-01-21T16:00:00.000Z\",\"tel\":\"0915115144\",\"pic\":\"5fe549d52e3df.jpg\",\"created_at\":\"2020-12-18T01:51:06.000Z\"}}'),
+('ISADLzPD3K9jVrEjbpGeRjEGgENfudmD', 1614337694, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-26T11:08:13.545Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Feb 24 2021 17:08:13 GMT+0800 (台北標準時間)\"}');
+
+-- --------------------------------------------------------
+
+--
 -- 資料表結構 `studioorder`
 --
 
@@ -381,6 +380,12 @@ ALTER TABLE `product_list`
   ADD PRIMARY KEY (`p_sid`);
 
 --
+-- 資料表索引 `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`session_id`);
+
+--
 -- 資料表索引 `studioorder`
 --
 ALTER TABLE `studioorder`
@@ -400,7 +405,7 @@ ALTER TABLE `campaign_prodduct`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart1_items`
 --
 ALTER TABLE `cart1_items`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `member`
@@ -412,13 +417,13 @@ ALTER TABLE `member`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `orders1`
 --
 ALTER TABLE `orders1`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=256;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=367;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_items1`
 --
 ALTER TABLE `order_items1`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=276;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=422;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `product_cate`
