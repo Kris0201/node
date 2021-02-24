@@ -430,23 +430,27 @@ const [rows] = await db.query("SELECT * FROM `order_items1` JOIN `orders1` ON `o
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
     // res.json(rows[0] || 'no')
-    const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+    if(req.body.token){
+      const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+      let {p_sid, quantity} = req.body;
+      let data = {p_sid, quantity};
+      data.mid = token.mid;
+      let [check] = await db.query("SELECT * FROM `cart1_items` WHERE mid=?", [data.mid])
+      console.log(check)
+      // let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
+      const index = check.findIndex((value) => value.p_sid===data.p_sid)
+      if (index !== -1) {
+          data.quantity += check[0].quantity
+          const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
+          res.json(result || 'no')
+      } else{
+          const [result] = await db.query("INSERT INTO `cart1_items` SET ?", [data]);
+          res.json(result || 'no')
+      }  
 
-    let {p_sid, quantity} = req.body;
-    let data = {p_sid, quantity};
-    data.mid = token.mid;
-    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE mid=?", [data.mid])
-    console.log(check)
-    // let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
-    const index = check.findIndex((value) => value.p_sid===data.p_sid)
-    if (index !== -1) {
-        data.quantity += check[0].quantity
-        const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
-        res.json(result || 'no')
-    } else{
-        const [result] = await db.query("INSERT INTO `cart1_items` SET ?", [data]);
-        res.json(result || 'no')
-    }  
+    } else {
+      res.json('error')}
+    
 })
 
 app.get('/cart1items', async(req, res)=>{
@@ -555,21 +559,22 @@ app.get('/cart1Thanks',async(req,res)=>{
 // })
 
 //step2：單純處理分類
-app.post('/mainproductcate', async (req, res) => {
-    console.log("測試", req.body)
-    if (req.body.productCate == 1) {
-        const [rows] = await db.query("SELECT * FROM `product_list`");
-        res.json(rows)
-    } else {
-        const [rows] = await db.query("SELECT * FROM `product_list` WHERE `p_cate` =?", [req.body.productCate]);
-        res.json(rows);
-    }
+// app.post('/mainproductcate', async (req, res) => {
+//     console.log("測試", req.body)
+//     if (req.body.productCate == 1) {
+//         const [rows] = await db.query("SELECT * FROM `product_list`");
+//         res.json(rows)
+//     } else {
+//         const [rows] = await db.query("SELECT * FROM `product_list` WHERE `p_cate` =?", [req.body.productCate]);
+//         res.json(rows);
+//     }
 
-})
+// })
 
 
 //step3：分類+分頁
 app.get('/mainproductcate2', async (req, res) => {
+
     const perPage = 9;
     let productCate = parseInt(req.query.productCate) || 1;
     let sql = (productCate == 1) ? `SELECT COUNT(1) num FROM product_list` : `SELECT COUNT(1) num FROM product_list WHERE p_cate =${productCate}`
@@ -586,18 +591,7 @@ app.get('/mainproductcate2', async (req, res) => {
     let sql2 = (productCate == 1) ? `SELECT * FROM product_list LIMIT ${(page - 1) * perPage}, ${perPage}` : `SELECT * FROM product_list WHERE p_cate =${productCate} LIMIT ${(page - 1) * perPage}, ${perPage}`
 
     const [rows] = await db.query(sql2);
-    // if (productCate == 1) {
-    //     //查詢詳細頁資料
-    //     const [rows_tmp] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]);
-    //     rows = rows_tmp;
-    //     // newRows=[rows]
-    //     //rows：每頁所呈現的9筆資料
-    //     //LIMIT ? ?：LIMIT(索引值, 拿幾筆)
-    // } else {
-    //      const [rows_tmp] = await db.query("SELECT * FROM `product_list` WHERE `p_cate` =? LIMIT ?, ?", [productCate, (page - 1) * perPage, perPage]);
-    //      rows = rows_tmp;
-    // }
-
+    
 
     if (totalRows > 0) {
         if (page < 1)
@@ -708,7 +702,7 @@ app.post("/mainproductdetail", upload.none(), async (req, res) => {
   res.json(rows);
 });
 
-//分頁
+
 
 //---------↑  Kris  商品區--------------------
 
