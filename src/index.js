@@ -449,23 +449,27 @@ const [rows2] = await db.query("SELECT * FROM `orders1` WHERE `sid` =? ", [req.b
 app.post('/AddToCart1', async(req, res)=>{
     // const [rows] = await db.query("SELECT * FROM `products` WHERE sid=?", [ req.body.productId]);
     // res.json(rows[0] || 'no')
-    const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+    if(req.body.token){
+      const token = jwt.verify(req.body.token, process.env.JWT_KEY);
+      let {p_sid, quantity} = req.body;
+      let data = {p_sid, quantity};
+      data.mid = token.mid;
+      let [check] = await db.query("SELECT * FROM `cart1_items` WHERE mid=?", [data.mid])
+      console.log(check)
+      // let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
+      const index = check.findIndex((value) => value.p_sid===data.p_sid)
+      if (index !== -1) {
+          data.quantity += check[0].quantity
+          const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
+          res.json(result || 'no')
+      } else{
+          const [result] = await db.query("INSERT INTO `cart1_items` SET ?", [data]);
+          res.json(result || 'no')
+      }  
 
-    let {p_sid, quantity} = req.body;
-    let data = {p_sid, quantity};
-    data.mid = token.mid;
-    let [check] = await db.query("SELECT * FROM `cart1_items` WHERE mid=?", [data.mid])
-    console.log(check)
-    // let [check] = await db.query("SELECT * FROM `cart1_items` WHERE p_sid=?", [p_sid])
-    const index = check.findIndex((value) => value.p_sid===data.p_sid)
-    if (index !== -1) {
-        data.quantity += check[0].quantity
-        const [result] = await db.query("UPDATE `cart1_items` SET ? WHERE p_sid=?", [data, p_sid]);
-        res.json(result || 'no')
-    } else{
-        const [result] = await db.query("INSERT INTO `cart1_items` SET ?", [data]);
-        res.json(result || 'no')
-    }  
+    } else {
+      res.json('error')}
+    
 })
 
 app.get('/cart1items', async(req, res)=>{
