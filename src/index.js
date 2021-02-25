@@ -307,8 +307,10 @@ app.post('/getorderproduct',async(req,res)=>{
     })
   }
 })
-app.get('/getfavproduct',async(req,res)=>{
-  const [rows] = await db.query("SELECT * FROM `fav-product` ")
+app.post('/getfavproduct',async(req,res)=>{
+  const token = jwt.verify(req.body.mid, process.env.JWT_KEY);
+
+  const [rows] = await db.query("SELECT * FROM `fav-product` WHERE member_id = ?",[token.mid])
   if(rows.length){ 
       res.json(
       rows,
@@ -322,27 +324,70 @@ app.get('/getfavproduct',async(req,res)=>{
   }
 })
 app.post('/addfavproduct',async(req,res)=>{
-  const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid = ?",[req.body.p_sid])
-  if(rows.length===1){
-      const [result] = await db.query('INSERT INTO `fav-product` set ?',[{...rows[0]}])
-      if (result.affectedRows === 1) {
-          res.json({
-            fav: '收藏成功',
-            body: req.body,
-          })
-        } else {
-          res.json({
-            fav: false,
-            body: req.body,
-          })
-        }
+  const token = jwt.verify(req.body.mid, process.env.JWT_KEY);
+  // const {mid}=req.body
+console.log(req.body)
+  const [rows2] = await db.query("SELECT * FROM `fav-product` WHERE p_sid = ? AND member_id = ?",[req.body.p_sid,token.mid])
+  if(rows2.length===1)
+  {
+    const [del] = await db.query("DELETE FROM `fav-product` WHERE p_sid = ?  AND  member_id = ?",[req.body.p_sid,token.mid])
+    if (del.affectedRows === 1) {
+      res.json({
+        fav: false,
+        body: req.body,
+      })
+    } 
+
   }
   else{
-      res.json({fav:false})
+    const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid = ? ",[req.body.p_sid])
+    if(rows.length===1){
+        const [result] = await db.query('INSERT INTO `fav-product` set ?',[{...rows[0],"member_id":token.mid,"fav_id":req.body.p_sid}])
+        console.log("req.body.p_sid",req.body.p_sid)
+        if (result.affectedRows === 1) {
+            res.json({
+              fav: true,
+              body: req.body,
+            })
+          } else {
+            res.json({
+              fav: false,
+              body: req.body,
+            })
+          }
+    }
+    else{
+        res.json({fav:false})
+    }
   }
 })
+// app.post('/addfavproduct',async(req,res)=>{
+//   // const token = jwt.verify(req.body.mid, process.env.JWT_KEY);
+
+//   const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid = ?",[req.body.p_sid])
+//   if(rows.length===1){
+
+//     const [result] = await db.query('INSERT INTO `fav-product` set ?',[{...rows[0]}])
+//     if (result.affectedRows === 1) {
+//         res.json({
+//           fav: '收藏成功',
+//           body: req.body,
+//         })
+//       } else {
+//         res.json({
+//           fav: false,
+//           body: req.body,
+//         })
+//       }
+//   }
+//   else{
+//       res.json({fav:false})
+//   }
+// })
 app.delete('/deletefavproduct',async(req,res)=>{
-  const [rows] = await db.query("DELETE FROM `fav-product` WHERE p_sid = ?",[req.body.p_sid])
+  const token = jwt.verify(req.body.mid, process.env.JWT_KEY);
+
+  const [rows] = await db.query("DELETE FROM `fav-product` WHERE p_sid = ? AND member_id = ?",[req.body.p_sid,token.mid])
 console.log(req.body.p_sid)
 console.log(req.body)
   if (rows.affectedRows === 1) {
@@ -752,18 +797,43 @@ app.post("/mainproductcate", async (req, res) => {
 // })
 
 //商品詳細頁
-app.post('/mainproductdetail', upload.none(), async (req, res) => {
-    console.log("測試", req.body)
-    const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid=?", [req.body.productSid]);
-    res.json(rows);
-})
-app.post("/mainproductdetail", upload.none(), async (req, res) => {
-  console.log("測試", req.body);
+app.post('/mainproductdetail',  async (req, res) => {
+  // const token = jwt.verify(req.body.mid, process.env.JWT_KEY);
+  const productSid =req.body.productSid;
+  console.log("測試-產品編號",req.body)
+  console.log("測試-產品編號",productSid)
+  // console.log("測試-會員編號", token.mid)
+  // const [rows] = await db.query("SELECT `product_list`.*,`fav-product`.fav_id FROM `product_list` JOIN `fav-product` ON `fav-product`.`mid` = ? AND  `fav-product`.`p_sid` =? WHERE `product_list`.`p_sid`=? ", [req.body.mid,productSid,productSid]);
   const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid=?", [
-    req.body.productSid,
-  ]);
-  res.json(rows);
-});
+        req.body.productSid,
+      ]);
+
+
+  if(rows.length===1){ 
+    const [rows2] = await db.query("SELECT `fav_id` FROM `fav-product` WHERE `member_id` = ? AND `p_sid` =?", [req.body.mid,productSid]);
+
+    if(rows2.length===1)
+    {
+      rows[0].fav_id=rows2[0].fav_id
+     console.log(rows)
+     res.json(rows)
+    }
+    else{
+      rows[0].fav_id=0
+      console.log(rows)
+      res.json(rows)
+    }
+         
+  }
+ 
+})
+// app.post("/mainproductdetail", upload.none(), async (req, res) => {
+//   console.log("測試", req.body);
+//   const [rows] = await db.query("SELECT * FROM `product_list` WHERE p_sid=?", [
+//     req.body.productSid,
+//   ]);
+//   res.json(rows);
+// });
 
 
 
