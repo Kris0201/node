@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-02-25 16:20:54
+-- 產生時間： 2021-02-25 16:25:11
 -- 伺服器版本： 10.4.17-MariaDB
 -- PHP 版本： 7.3.25
 
@@ -196,14 +196,6 @@ CREATE TABLE `orders1` (
   `creditCardExpireYear` varchar(4) NOT NULL,
   `creditCardBack` varchar(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 傾印資料表的資料 `orders1`
---
-
-INSERT INTO `orders1` (`sid`, `mid`, `amount`, `freight`, `receiver`, `receiverMobile`, `address`, `order_date`, `order_state`, `designated_date`, `designated_period`, `delivery`, `deliver_state`, `payment_type`, `username`, `tel`, `pan_no1`, `pan_no2`, `pan_no3`, `pan_no4`, `creditCardExpireMonth`, `creditCardExpireYear`, `creditCardBack`) VALUES
-(367, 84, 0, 3000, '', '', '', '2021-02-24 17:28:23', '訂單成立', '0000-00-00', '不指定', '快遞宅配', '備貨中', '信用卡一次付清', '111', '', '', '', '', '', '1', '2021', ''),
-(368, 84, 6150, 2600, '1111', '1111', '1111', '2021-02-25 14:11:13', '訂單成立', '2021-03-08', '8:00-12:00', '快遞宅配', '備貨中', '信用卡一次付清', '1111', '1111', '1111', '1111', '1111', '1111', '1', '2021', '111');
 
 -- --------------------------------------------------------
 
