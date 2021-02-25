@@ -626,8 +626,8 @@ app.post('/AddToCartActivity', async(req, res)=>{
 
 app.get('/cartStudioItems', async(req, res)=>{
   if(req.session.user.mid){
-      const [rows] = await db.query("SELECT * FROM `cart_studio` JOIN `studio_product` ON `cart_studio`.`studio_id` = `studio_product`.`studio_id`  WHERE `cart_studio`.`mid` = ?", [144]);
-      console.log(rows);
+      const [rows] = await db.query("SELECT * FROM `cart_studio` JOIN `studio_product` ON `cart_studio`.`studio_id` = `studio_product`.`studio_id`  WHERE `cart_studio`.`mid` = ?", [req.session.user.mid]);
+      console.log('studio', rows);
       res.json(rows)}
       
 })
