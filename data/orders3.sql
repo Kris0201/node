@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `orders1`
+-- 資料表結構 `orders3`
 --
 
-CREATE TABLE `orders1` (
+CREATE TABLE `orders3` (
   `sid` int(11) NOT NULL,
   `mid` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
@@ -43,10 +43,10 @@ CREATE TABLE `orders1` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- 傾印資料表的資料 `orders1`
+-- 傾印資料表的資料 `orders3`
 --
 
-INSERT INTO `orders1` (`sid`, `mid`, `amount`, `receiver`, `receiverMobile`, `address`, `order_date`, `order_state`, `designated_date`, `designated_period`, `deliver_state`, `payment_type`) VALUES
+INSERT INTO `orders3` (`sid`, `mid`, `amount`, `receiver`, `receiverMobile`, `address`, `order_date`, `order_state`, `designated_date`, `designated_period`, `deliver_state`, `payment_type`) VALUES
 (67, 1, 7140, '', '', '', '2020-12-23 16:50:13', '訂單成立', '0000-00-00', '不指定', '未出貨', '貨到付款'),
 (68, 1, 5600, '', '', '', '2020-12-24 10:11:20', '訂單成立', '0000-00-00', '不指定', '未出貨', '貨到付款');
 
@@ -55,9 +55,9 @@ INSERT INTO `orders1` (`sid`, `mid`, `amount`, `receiver`, `receiverMobile`, `ad
 --
 
 --
--- 資料表索引 `orders1`
+-- 資料表索引 `orders3`
 --
-ALTER TABLE `orders1`
+ALTER TABLE `orders3`
   ADD PRIMARY KEY (`sid`);
 
 --
@@ -65,9 +65,9 @@ ALTER TABLE `orders1`
 --
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `orders1`
+-- 使用資料表自動遞增(AUTO_INCREMENT) `orders3`
 --
-ALTER TABLE `orders1`
+ALTER TABLE `orders3`
   MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 COMMIT;
 
