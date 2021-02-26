@@ -638,6 +638,7 @@ app.post('/AddToCartStudio', async(req, res)=>{
     let {studio_id, date, time_period, price} = req.body;
     let data = {studio_id, date, time_period, price};
     data.mid = token.mid;
+    // console.log('client: ', data)
     let [check] = await db.query("SELECT * FROM `cart_studio` WHERE mid=?", [data.mid])
     const index = check.findIndex((value) => value.studio_id===data.studio_id)
     if (index !== -1) {
@@ -647,7 +648,7 @@ app.post('/AddToCartStudio', async(req, res)=>{
         res.json('error')
     } else{
         const [result] = await db.query("INSERT INTO `cart_studio` SET ?", [data]);
-        console.log(result)
+        // console.log('教室租借加入購物車',result)
         res.json(result)
     }  
 
