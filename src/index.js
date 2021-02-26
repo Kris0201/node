@@ -833,9 +833,6 @@ app.post("/mainproductcate", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-
-=======
 //step3：分類+分頁
 // app.post('/mainproductcate', async(req, res)=>{
 //     // const perPage = 9;
@@ -891,7 +888,6 @@ app.post("/mainproductcate", async (req, res) => {
 //         res.json(rows);
 //     }
 // })
->>>>>>> 9f6aa4665abb7b5b0b889893d01ab4c380586f36
 
 //商品詳細頁
 app.post("/mainproductdetail", async (req, res) => {
