@@ -738,63 +738,6 @@ app.post("/mainproductcate", async (req, res) => {
 });
 
 
-//step3：分類+分頁
-// app.post('/mainproductcate', async(req, res)=>{
-//     // const perPage = 9; 
-//     // const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list` "); //此行在MySQL中執行會得到50(筆)結果
-//     // const perPage = 9;
-//     // const [t_rows] = await db.query("SELECT COUNT(1) num FROM `product_list` ");
-
-//     // const totalRows = t_rows[0].num;
-//     // console.log('hi',totalRows);
-//     // const totalPages = Math.ceil(totalRows / perPage);
-
-//     // let page = parseInt(req.query.page) || 1; //沒有的時候就得到1
-
-//     // //限定page的合理範圍
-//     // let rows = [];
-//     // if (totalRows > 0) {
-//     //     if (page < 1)
-//     //         return res.redirect('/product_list/list');
-//     //     //若走到此行，則不會再進行此行以下的指令
-
-//     //     if (page > totalPages)
-//     //         return res.redirect(`/product_list/list?page=${totalPages}`);
-
-//     //     [rows] = await db.query("SELECT * FROM `product_list` LIMIT ?, ?", [(page - 1) * perPage, perPage]); //LIMIT ? ?：資料的索引值/上限值
-
-
-//     // return {
-//     //     perPage,
-//     //     totalRows,
-//     //     totalPages,
-//     //     page,
-//     //     rows,
-//     // }
-
-//     // }
-//     console.log("測試",req.body)
-//     if(req.body.productCate==1) {
-
-
-// //per page 9
-
-// //totalrows 50
-
-// //total page = 5
-
-// //limit from ? to ?
-
-//         const [rows]=await db.query("SELECT * FROM `product_list` LIMIT ?, ?",[ req.body.page - 1, 9]);
-//         res.json(rows);
-//     }else{
-
-//         //(page-1) *9 起始值
-
-//         const [rows]=await db.query("SELECT * FROM `product_list` WHERE `p_cate` =? LIMIT ?, ?",[req.body.productCate, req.body.page - 1, 9]);
-//         res.json(rows);
-//     }
-// })
 
 //商品詳細頁
 app.post('/mainproductdetail',  async (req, res) => {
