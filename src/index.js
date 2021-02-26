@@ -303,7 +303,7 @@ app.post('/getorderproduct',async(req,res)=>{
     else{ 
       res.json({
       fav: "none",
-      body: rows,
+      body: req.body,
     })
   }
 })
