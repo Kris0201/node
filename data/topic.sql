@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-03-02 14:00:23
+-- 產生時間： 2021-03-02 23:30:08
 -- 伺服器版本： 10.4.17-MariaDB
 -- PHP 版本： 7.3.25
 
@@ -76,13 +76,6 @@ CREATE TABLE `cart1_items` (
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- 傾印資料表的資料 `cart1_items`
---
-
-INSERT INTO `cart1_items` (`sid`, `mid`, `p_sid`, `quantity`) VALUES
-(237, 84, 3, 3);
-
 -- --------------------------------------------------------
 
 --
@@ -95,13 +88,6 @@ CREATE TABLE `cart_activity` (
   `p_sid` int(11) NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- 傾印資料表的資料 `cart_activity`
---
-
-INSERT INTO `cart_activity` (`sid`, `mid`, `p_sid`, `quantity`) VALUES
-(17, 84, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -385,45 +371,6 @@ CREATE TABLE `sessions` (
   `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- 傾印資料表的資料 `sessions`
---
-
-INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('-d-suXd8LlBz0yV-yfiZPf_FsvGzLoBt', 1614501152, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:32:31.836Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:32:31 GMT+0800 (台北標準時間)\"}'),
-('17oAVvmXEywjYO-RfVZ-sbxh2JJ15Hqb', 1614501084, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:31:24.155Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:31:24 GMT+0800 (台北標準時間)\"}'),
-('1C2dM5EmutO8kP2XPJVTeCXTqUe8WWr0', 1614502019, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:46:58.864Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:46:58 GMT+0800 (台北標準時間)\"}'),
-('1Ve4AThh2Ayg2sdhpCxAHQl5PjKxjKmv', 1614502022, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:47:01.639Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:47:01 GMT+0800 (台北標準時間)\"}'),
-('2AeUUNOatBAibXUsECjm3lb222gjIVmh', 1614501942, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:45:42.268Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:45:42 GMT+0800 (台北標準時間)\"}'),
-('3D6nZZzqb90CEhf_M2aYlJqF0Dlo_eSz', 1614500975, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:29:34.586Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:29:34 GMT+0800 (台北標準時間)\"}'),
-('6w_NAgK5NC4BgNm1FtpjMVtY2rlPD8PP', 1614500974, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:29:34.045Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:29:34 GMT+0800 (台北標準時間)\"}'),
-('C9Iu4-jRzk36FenD5FIHDGY3le5fHaHE', 1614504264, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T09:24:23.916Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 15:24:23 GMT+0800 (台北標準時間)\",\"user\":{\"mid\":84,\"username\":\"fish\",\"account\":\"fish\",\"password\":\"123456\",\"email\":\"spe9g0908@gmail.com\",\"address\":\"台北市\",\"birthday\":\"1987-01-21T16:00:00.000Z\",\"tel\":\"0915115144\",\"pic\":\"5fe549d52e3df.jpg\",\"created_at\":\"2020-12-18T01:51:06.000Z\"}}'),
-('CLbtpDaR9wFzvTEZoFN_9k_AD08C2z0z', 1614501140, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:32:20.159Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:32:20 GMT+0800 (台北標準時間)\"}'),
-('F5a4aPhIaVt50tIs9BmAZvOuxHQNQZqn', 1614500977, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:29:37.346Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:29:37 GMT+0800 (台北標準時間)\"}'),
-('JLdmSwgDH9E__iBbShBwTaQPTMdTzL9p', 1614501138, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:32:18.482Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:32:18 GMT+0800 (台北標準時間)\"}'),
-('LkOtEgzd3I66wtFH0HGF144dOETREl7G', 1614501114, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:31:53.713Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:31:53 GMT+0800 (台北標準時間)\"}'),
-('PbVNMZp0TK73KSMCiSadXWHY0reC2jA9', 1614501135, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:32:14.780Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:32:14 GMT+0800 (台北標準時間)\"}'),
-('SXxgeXQvzn16H4XvhX0Zs7iQU_MqmAkU', 1614501112, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:31:51.908Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:31:51 GMT+0800 (台北標準時間)\"}'),
-('V_r_vbn3DearNWLSIQZcpLOCbYj5t5f_', 1614500980, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:29:39.633Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:29:39 GMT+0800 (台北標準時間)\"}'),
-('_Jyt5tLG3mt7MlF1CFwOa1jdZ-73v7pj', 1614501114, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:31:53.519Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:31:53 GMT+0800 (台北標準時間)\"}'),
-('_VN7z6Eb1EeMCMcAtx5g1N6occK0s3hs', 1614500968, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:29:27.725Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:29:27 GMT+0800 (台北標準時間)\"}'),
-('_pKsHgTtKyBLgEBUX3_nK42YK2t9LTUt', 1614500966, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:29:25.548Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:29:25 GMT+0800 (台北標準時間)\"}'),
-('d2qaGPLCSMwPbXljeVtx44IeJpINTmbc', 1614501921, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:45:21.144Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:45:21 GMT+0800 (台北標準時間)\"}'),
-('dEEmyZbNyJjn1AmnKHXwS5f3-kR1cDj7', 1614501154, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:32:33.682Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:32:33 GMT+0800 (台北標準時間)\"}'),
-('g2M9EsLYUTLGX6xp26mIYVCr0-eN-SJI', 1614500965, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:29:25.285Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:29:25 GMT+0800 (台北標準時間)\"}'),
-('id6OksnlH87Vymby2kPT1wmpj0NdWK-n', 1614501511, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:38:31.099Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:38:31 GMT+0800 (台北標準時間)\"}'),
-('pzT5HtHMtryWsr6Xn1aPWtmqemQwTLji', 1614502019, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:46:58.764Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:46:58 GMT+0800 (台北標準時間)\"}'),
-('ryP8aRPcnmDniYNqY5iDq8gmSZKsSei6', 1614500787, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:26:27.159Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:26:27 GMT+0800 (台北標準時間)\"}'),
-('soR6u_kpKqepTQxrhfAZyrxG74mFWOpR', 1614501115, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:31:55.013Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:31:55 GMT+0800 (台北標準時間)\"}'),
-('tIJinJrWqfuCj1RUEuOD7fhN8tZEm4Gk', 1614500978, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:29:37.538Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:29:37 GMT+0800 (台北標準時間)\"}'),
-('tr-5vEiXPuS9fNxNa5FoQTWFc7XKPv_o', 1614504261, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T09:24:21.090Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 15:24:21 GMT+0800 (台北標準時間)\"}'),
-('vBW74vMT1-JZr5nC4fzQIbKzwAWwVVt6', 1614501001, '{\"cookie\":{\"originalMaxAge\":179999999,\"expires\":\"2021-02-28T08:30:01.209Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:30:01 GMT+0800 (台北標準時間)\"}'),
-('xAzKoh3Yfrc7BecaYppgTY9e_-x63Eei', 1614501139, '{\"cookie\":{\"originalMaxAge\":179999999,\"expires\":\"2021-02-28T08:32:19.220Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:32:19 GMT+0800 (台北標準時間)\"}'),
-('xbAVzcxGXIlAVE3W6X1cMpQC_5HLOn5_', 1614501153, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:32:32.848Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:32:32 GMT+0800 (台北標準時間)\"}'),
-('xcdsmjtDas50DXHO0xKALbLY5xZCSpKs', 1614501514, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:38:34.311Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:38:34 GMT+0800 (台北標準時間)\"}'),
-('yBD6D0P92-SwDPA6GAjNkCrNe71y_t55', 1614500964, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:29:23.555Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:29:23 GMT+0800 (台北標準時間)\"}'),
-('yX5aKPOcvkG-CnG1_L3Rkpy1gKeyRgml', 1614501154, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-02-28T08:32:34.450Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Fri Feb 26 2021 14:32:34 GMT+0800 (台北標準時間)\"}');
-
 -- --------------------------------------------------------
 
 --
@@ -465,17 +412,18 @@ INSERT INTO `studioorder` (`sid`, `studio_name`, `studio_id`, `date`, `time_id`,
 CREATE TABLE `studio_product` (
   `sid` int(11) NOT NULL,
   `studio_id` varchar(255) NOT NULL,
-  `studio_name` varchar(255) NOT NULL
+  `studio_name` varchar(255) NOT NULL,
+  `img` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- 傾印資料表的資料 `studio_product`
 --
 
-INSERT INTO `studio_product` (`sid`, `studio_id`, `studio_name`) VALUES
-(1, 'A01', '大安館教室'),
-(2, 'A02', '東門管教室'),
-(4, 'A03', '西門館教室');
+INSERT INTO `studio_product` (`sid`, `studio_id`, `studio_name`, `img`) VALUES
+(1, 'A01', '大安館教室', 'class1-1'),
+(2, 'A02', '東門管教室', 'class2-1'),
+(4, 'A03', '西門館教室', 'class3-1');
 
 --
 -- 已傾印資料表的索引
@@ -578,19 +526,19 @@ ALTER TABLE `campaign_prodduct`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart1_items`
 --
 ALTER TABLE `cart1_items`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=238;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=243;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart_activity`
 --
 ALTER TABLE `cart_activity`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart_studio`
 --
 ALTER TABLE `cart_studio`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `member`
