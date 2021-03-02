@@ -27,7 +27,7 @@ app.use(
     resave: false,
     store: sessionStore,
     cookie: {
-      maxAge: 180000000,
+      maxAge: 400000000,
     },
   })
 );
