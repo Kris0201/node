@@ -608,26 +608,34 @@ app.post("/Cart1Content1DecreaseQty", async (req, res) => {
 app.post("/Cart1Content2", upload.none(), async (req, res) => {
   const inputsAlot = { ...req.body };
   // console.log('收到' , inputsAlot);
+
+  // 查詢購物車
   const [
     cart,
   ] = await db.query(
     "SELECT * FROM `cart1_items` JOIN `product_list` ON `product_list`.`p_sid` = `cart1_items`.`p_sid` WHERE `cart1_items`.`mid` = ?",
     [req.session.user.mid]
   );
+
+  // 購物車總金額
   let CartTotal = 0;
   cart.forEach((item) => {
     CartTotal += item.p_price * item.quantity;
   });
 
+  // 補充表單過來缺的資料
   inputsAlot.mid = req.session.user.mid;
   inputsAlot.order_date = new Date();
   inputsAlot.amount = CartTotal;
+
+  // 建立orders
   const [result1] = await db.query("INSERT INTO `orders1` SET ?", [inputsAlot]);
   // console.log('前端來的 ' + inputsAlot)
   // console.log('這筆交易單號 ' + result1.insertId)
   req.session.lastInsertId = result1.insertId;
   // console.log('把交易單號傳給session ' + req.session.lastInsertId)
 
+  // 建立order items
   cart.forEach((item, index) => {
     let order_items1 = {};
     order_items1.order_sid = result1.insertId;
