@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2021-03-02 23:30:08
+-- 產生時間： 2021-03-03 16:28:17
 -- 伺服器版本： 10.4.17-MariaDB
 -- PHP 版本： 7.3.25
 
@@ -130,13 +130,6 @@ CREATE TABLE `fav-product` (
   `member_id` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- 傾印資料表的資料 `fav-product`
---
-
-INSERT INTO `fav-product` (`p_sid`, `fav_id`, `p_name`, `p_cate`, `p_size`, `p_price`, `p_intro`, `p_img`, `p_carousel_img`, `p_desc`, `Alcohol_vol`, `ingredient`, `cake`, `m_v`, `storage`, `expir`, `member_id`) VALUES
-(3, 3, '可拉斯可', 4, '6吋', 150, '經典威士忌巧克力蛋糕', '3.jpeg', '3.jpeg,3-1.jpeg,3-2.jpeg', '經典不敗，愈是單純的東西愈能展現出價值，威士忌與70%苦甜巧克力交織共舞，不管人生是不是苦甜參半，都要帶點微醺和微笑。', 40, '威士忌/70%巧克力/鮮奶油', '千層蛋糕體', '奶蛋素', '冷藏', '冷藏1~2天內食用完畢，實際保存期限請見包裝標示', '84');
-
 -- --------------------------------------------------------
 
 --
@@ -216,10 +209,10 @@ CREATE TABLE `orders3` (
   `amount` int(11) NOT NULL,
   `receiver` varchar(255) NOT NULL,
   `receiverMobile` varchar(255) NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `order_date` datetime NOT NULL,
+  `classroom` varchar(255) NOT NULL,
+  `order_date` varchar(255) NOT NULL,
   `order_state` varchar(255) DEFAULT '訂單成立',
-  `designated_date` date DEFAULT current_timestamp(),
+  `designated_date` varchar(255) DEFAULT NULL,
   `designated_period` varchar(255) DEFAULT '不指定',
   `deliver_state` varchar(255) NOT NULL,
   `payment_type` varchar(255) NOT NULL
@@ -229,9 +222,10 @@ CREATE TABLE `orders3` (
 -- 傾印資料表的資料 `orders3`
 --
 
-INSERT INTO `orders3` (`sid`, `mid`, `amount`, `receiver`, `receiverMobile`, `address`, `order_date`, `order_state`, `designated_date`, `designated_period`, `deliver_state`, `payment_type`) VALUES
-(67, 1, 7140, '', '', '', '2020-12-23 16:50:13', '訂單成立', '0000-00-00', '不指定', '未出貨', '貨到付款'),
-(68, 1, 5600, '', '', '', '2020-12-24 10:11:20', '訂單成立', '0000-00-00', '不指定', '未出貨', '貨到付款');
+INSERT INTO `orders3` (`sid`, `mid`, `amount`, `receiver`, `receiverMobile`, `classroom`, `order_date`, `order_state`, `designated_date`, `designated_period`, `deliver_state`, `payment_type`) VALUES
+(67, 1, 7140, '', '', '大安館教室', '2020-12-23 16:50:13', '訂單成立', '2021-03-09', '09:00-12:00AM', '未出貨', '貨到付款'),
+(68, 1, 5600, '', '', '東門館教室', '2020-12-24 10:11:20', '訂單成立', '2021-03-10', '不指定', '未出貨', '貨到付款'),
+(69, 1, 5600, '', '', '西門館教室', '2020-12-24 10:11:20', '訂單成立', '2021-03-09', '不指定', '未出貨', '貨到付款');
 
 -- --------------------------------------------------------
 
@@ -370,6 +364,98 @@ CREATE TABLE `sessions` (
   `expires` int(11) UNSIGNED NOT NULL,
   `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- 傾印資料表的資料 `sessions`
+--
+
+INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
+('0LakhGTuKLS57x-QKpfNLFlYSkEk8Af0', 1614885350, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:15:49.529Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:15:49 GMT+0800 (台北標準時間)\"}'),
+('0qkdvmsW25yIzWSr570ezVU8M0W7pj07', 1614879913, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:45:12.602Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:45:12 GMT+0800 (台北標準時間)\"}'),
+('1NUAp06Om7UVkze-qsksY4tJZn79E9Xj', 1614885451, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:17:30.826Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:17:30 GMT+0800 (台北標準時間)\"}'),
+('2G-zTPBu2I5wFvD0ts5xVwZ4tGdBzlwq', 1614879940, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:45:40.324Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:45:40 GMT+0800 (台北標準時間)\"}'),
+('2_ahF_e1mXDVnuBlYF42_7wSIxQaF8pl', 1614880001, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:46:41.080Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:46:41 GMT+0800 (台北標準時間)\"}'),
+('3ocNMGjuqMWN09bvADEp_3aC6CsMH7SZ', 1614881311, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:08:30.758Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:08:30 GMT+0800 (台北標準時間)\"}'),
+('4SJq171cbH2F8y0Ii7-BR4IdQm4QVI_I', 1614880439, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:53:59.443Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:53:59 GMT+0800 (台北標準時間)\"}'),
+('4hoRei60R6uiw0OadsKPVSYfud7CnKMJ', 1614879938, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:45:38.370Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:45:38 GMT+0800 (台北標準時間)\"}'),
+('5q8KCA2K8pBfbR3w86ljSXyfHodnehxT', 1614880458, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:54:18.416Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:54:18 GMT+0800 (台北標準時間)\"}'),
+('6dwMnoWKOxmK2RwiJssEmrCepAJUYa9J', 1614880975, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:02:54.971Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:02:54 GMT+0800 (台北標準時間)\"}'),
+('6vEZmw4Hurw82sKCZ5qZ6Qj5f9DcxKzt', 1614880453, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:54:13.191Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:54:13 GMT+0800 (台北標準時間)\"}'),
+('72gZQmXfCzOErTUOyFJMZP5nU-iTEn2P', 1614879501, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:38:20.694Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:38:20 GMT+0800 (台北標準時間)\"}'),
+('7QDiENiarPu-UUY2vIhVC8-63KScRtZD', 1614885434, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:17:14.161Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:17:14 GMT+0800 (台北標準時間)\"}'),
+('7bNAjyksm6PqgX3eER1eL4ouVFnuMkjs', 1614880153, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:49:13.378Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:49:13 GMT+0800 (台北標準時間)\"}'),
+('9AymwT86oE7ijkoLOfPSGjDx-q1R3-uK', 1614881314, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:08:33.766Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:08:33 GMT+0800 (台北標準時間)\"}'),
+('9YRdEQS0VS_OgW0yZlU6Kv37DaxFVZ0T', 1614880418, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:53:38.093Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:53:38 GMT+0800 (台北標準時間)\"}'),
+('9_ABv83zXPY4yjTCZKEKPg4mDD7RKJx-', 1614880973, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:02:52.799Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:02:52 GMT+0800 (台北標準時間)\"}'),
+('9_c-TUoAorCuAJoz5zSJW7zEvEM6krS-', 1614880691, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:58:10.729Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:58:10 GMT+0800 (台北標準時間)\"}'),
+('Ao8LQbq4L7gJBnGKw_3pE7UJ4thnoN0v', 1615142233, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T18:37:13.051Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 11:30:33 GMT+0800 (台北標準時間)\"}'),
+('BR7rrk7C-e1fb8FKAwIDM6TV-OtXKH9c', 1614930584, '{\"cookie\":{\"originalMaxAge\":179999990,\"expires\":\"2021-03-05T07:49:43.591Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 13:49:43 GMT+0800 (台北標準時間)\",\"user\":{\"mid\":84,\"username\":\"fish\",\"account\":\"fish\",\"password\":\"123456\",\"email\":\"spe9g0908@gmail.com\",\"address\":\"台北市\",\"birthday\":\"1987-01-21T16:00:00.000Z\",\"tel\":\"0915115144\",\"pic\":\"5fe549d52e3df.jpg\",\"created_at\":\"2020-12-18T01:51:06.000Z\"}}'),
+('BTs0-C5K2cyropQMWWN3yF98tBtyZALd', 1614881302, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:08:22.405Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:08:22 GMT+0800 (台北標準時間)\"}'),
+('BUhpNgxb4ZbvqxHrlnnF5qrP8UjJ92Qo', 1614880285, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:51:24.749Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:51:24 GMT+0800 (台北標準時間)\"}'),
+('BcvbpkSvcX02fL3-1fAKZUPkc2kVXKMN', 1614885448, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:17:27.648Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:17:27 GMT+0800 (台北標準時間)\"}'),
+('BtgjIxASGKALVRr8vQodRY9OQa69vlfu', 1614885432, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:17:11.577Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:17:11 GMT+0800 (台北標準時間)\"}'),
+('F7gRJkLTCI8ek_xnQYuF33EYZBPEMxsk', 1614880160, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:49:20.458Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:49:20 GMT+0800 (台北標準時間)\"}'),
+('Fcs5pQ8qYcnbNe2fW-aJAGu2OePzrF8q', 1614885370, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:16:10.336Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:16:10 GMT+0800 (台北標準時間)\"}'),
+('GxId_PqVOKt0ghNmVV93kMTcLuaLlgbc', 1614885367, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:16:07.247Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:16:07 GMT+0800 (台北標準時間)\"}'),
+('HQYKTrl1eXUm_T1D4AlNSclaOtWkiolK', 1614881308, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:08:27.821Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:08:27 GMT+0800 (台北標準時間)\"}'),
+('IPMmwVPzn9bHKg2DztEerMvM1M_fjMv_', 1614880644, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:57:24.393Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:57:24 GMT+0800 (台北標準時間)\"}'),
+('ItuiF7yCnGQQHluscrtEZEbBmKVoj8xW', 1614884500, '{\"cookie\":{\"originalMaxAge\":179999999,\"expires\":\"2021-03-04T19:01:40.292Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:01:40 GMT+0800 (台北標準時間)\"}'),
+('JD1a7l9gsWTYowFWT_BBtxdWRfhjldN5', 1614880695, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:58:15.149Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:58:15 GMT+0800 (台北標準時間)\"}'),
+('K6Jwz2AUrkqr1h8Bz4MVu_DONrYnj9gJ', 1614885347, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:15:46.569Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:15:46 GMT+0800 (台北標準時間)\"}'),
+('L9RoYshSrjIpQEfVWo9gp2pTC_x0Nred', 1614880820, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:00:20.395Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:00:20 GMT+0800 (台北標準時間)\"}'),
+('Lch3XWVzAWIE3vaIAqlpEcL7USA_Dt89', 1614879497, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:38:17.492Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:38:17 GMT+0800 (台北標準時間)\"}'),
+('LmUGFDz-P-Or19jhPjY-_bvG0LiPNsti', 1614879516, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:38:35.500Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:38:35 GMT+0800 (台北標準時間)\"}'),
+('Ls5lK8v7LpiDUzzeMQrrJKMJfvvTKHEg', 1614880657, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:57:37.180Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:57:37 GMT+0800 (台北標準時間)\"}'),
+('Lw00AMfyYXK10Y4GAzKR5w2H2_W1MOpN', 1615107548, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T08:59:07.698Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:52:27 GMT+0800 (台北標準時間)\"}'),
+('M8PEo-qdjiqrUcm6M3qh5ctGTDIIUdAs', 1614885380, '{\"cookie\":{\"originalMaxAge\":179999999,\"expires\":\"2021-03-04T19:16:20.024Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:16:20 GMT+0800 (台北標準時間)\"}'),
+('NNfK7lOUj8yq8MSxJ6GLes-NtAxpQrEP', 1614883961, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:52:41.424Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:52:41 GMT+0800 (台北標準時間)\"}'),
+('NtmjFuxP978jCtRvjGnFsKQefr0-6E6p', 1614881316, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:08:36.097Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:08:36 GMT+0800 (台北標準時間)\"}'),
+('OABHFTv68pBmj3I_KBiDu7qEIN9Wtt1g', 1614880541, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:55:41.037Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:55:41 GMT+0800 (台北標準時間)\"}'),
+('Ouv3H87HgcZ9SxE4Z4asLU2RP2FFIWnT', 1614880416, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:53:36.395Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:53:36 GMT+0800 (台北標準時間)\"}'),
+('RiPlOqcUou2ulcvW2rSvWq41LoBaXy0f', 1614880829, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:00:28.780Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:00:28 GMT+0800 (台北標準時間)\"}'),
+('SNCEz8CnmmSId2WI1kbBxsAOSping7N2', 1615141516, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T18:25:16.403Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 11:18:36 GMT+0800 (台北標準時間)\"}'),
+('Ssgcan83s0nLEn77Fm5ieuRjWCgvwq9u', 1615106806, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T08:46:46.369Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:40:06 GMT+0800 (台北標準時間)\"}'),
+('TZHG1obYDGi_JEpVgthHDAwoCao_5t6H', 1615107539, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T08:58:58.655Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:52:18 GMT+0800 (台北標準時間)\"}'),
+('UmjtQ2FWQhOVyJZU5_a32k-iK2xqpZ01', 1615142242, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T18:37:21.712Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 11:30:41 GMT+0800 (台北標準時間)\"}'),
+('X11aQA24JCiMhh7XVKsvVhtMtW8hmIEi', 1614879238, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:33:58.415Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:33:58 GMT+0800 (台北標準時間)\"}'),
+('Y1THsoOcgCbQDxMnxfJmg6Gw5D0mrJEr', 1615141595, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T18:26:34.513Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 11:19:54 GMT+0800 (台北標準時間)\",\"user\":{\"mid\":84,\"username\":\"fish\",\"account\":\"fish\",\"password\":\"123456\",\"email\":\"spe9g0908@gmail.com\",\"address\":\"台北市\",\"birthday\":\"1987-01-21T16:00:00.000Z\",\"tel\":\"0915115144\",\"pic\":\"5fe549d52e3df.jpg\",\"created_at\":\"2020-12-18T01:51:06.000Z\"}}'),
+('Z2lOTpMRNNtTu4UEzFjQyR5RlhvwBoX1', 1614879503, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:38:23.398Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:38:23 GMT+0800 (台北標準時間)\"}'),
+('_LW0DD6rJIOo1Y5VoVzq4CeVcKt5hbvz', 1614880812, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:00:11.965Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:00:11 GMT+0800 (台北標準時間)\"}'),
+('_iXKvIJochuuTCi8evTg5UwlpxfKSpcX', 1614881097, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:04:57.463Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:04:57 GMT+0800 (台北標準時間)\"}'),
+('_iv-JkQFMu5HpfFPYA-tvjLe1a5eEWTW', 1615106810, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T08:46:49.601Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:40:09 GMT+0800 (台北標準時間)\"}'),
+('am8I-ihEPnUnEr8QgFjN3QEoxX6UjXdP', 1614885359, '{\"cookie\":{\"originalMaxAge\":179999999,\"expires\":\"2021-03-04T19:15:58.737Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:15:58 GMT+0800 (台北標準時間)\"}'),
+('aoCFqCIXN9ZOyYmwhV42Oxh0Yv48-P20', 1614879957, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:45:56.633Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:45:56 GMT+0800 (台北標準時間)\"}'),
+('bGfUtxai0KH4YQd3s8PoMw5lZDNeypAN', 1614880418, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:53:37.831Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:53:37 GMT+0800 (台北標準時間)\"}'),
+('c3Ku2jRdhwQRH8edbyz980JOMAvPeiGt', 1614885435, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:17:15.095Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:17:15 GMT+0800 (台北標準時間)\"}'),
+('d213KQ4ec55D04Ns2_IMks2Jn3jDuDMu', 1614880420, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:53:39.668Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:53:39 GMT+0800 (台北標準時間)\"}'),
+('dSOnI7ozJCodF7AurifhPT_fQ1hRonPw', 1614880964, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:02:43.846Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:02:43 GMT+0800 (台北標準時間)\"}'),
+('f2N637KMGDuDemAi8TAo6f_CFBjFQcQY', 1614880439, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:53:59.090Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:53:59 GMT+0800 (台北標準時間)\"}'),
+('fJ1frF5qCe_KXZXUI7IMnl5O_ntp13cO', 1614881782, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:16:22.181Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:16:22 GMT+0800 (台北標準時間)\"}'),
+('fNN3xdbwHwE_vENml09fch2WwuM5zp9-', 1614879319, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:35:18.632Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:35:18 GMT+0800 (台北標準時間)\"}'),
+('h7T345ksew-Fiso4X7GHZforQEiYR5jd', 1614880835, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:00:34.913Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:00:34 GMT+0800 (台北標準時間)\"}'),
+('hCnGgjYtfGNfOvEv4Ch8IB5OHtbyXwxt', 1614879936, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:45:36.318Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:45:36 GMT+0800 (台北標準時間)\"}'),
+('i7NtV3HoKKiiRvdFmVrPkzXg0XTHMgKi', 1614879994, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:46:33.910Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:46:33 GMT+0800 (台北標準時間)\"}'),
+('iIGk2OhLdy46LVBcIN5MZMtI8EdwLV8Z', 1614883460, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:44:20.497Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:44:20 GMT+0800 (台北標準時間)\"}'),
+('kViu-5Q1_7OIfwQ_3FRHfS3VS0om4rNe', 1615141519, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T18:25:18.530Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 11:18:38 GMT+0800 (台北標準時間)\"}'),
+('kq8r7gzVbEgEzPfqkyQ0D_K1nRH7Xpjq', 1615107543, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T08:59:02.853Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:52:22 GMT+0800 (台北標準時間)\"}'),
+('l7uucmabR60Egh3JSdKTwhXewZf0zvFq', 1614879939, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:45:38.539Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:45:38 GMT+0800 (台北標準時間)\"}'),
+('n4MIT_Cok5SLGMrFEgtlua2Ms-G_fAhn', 1615142246, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T18:37:25.842Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 11:30:45 GMT+0800 (台北標準時間)\"}'),
+('nMYOENz8zYQ_JCGxJbEKZ85X0tJ7_Pt1', 1614880679, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:57:59.023Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:57:59 GMT+0800 (台北標準時間)\"}'),
+('nWGjv3r2OAmXi2sN0KuIqK_1YvAGI_Em', 1614885447, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:17:27.139Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:17:27 GMT+0800 (台北標準時間)\"}'),
+('nl6VHbUcaV65xNt03aXAQaXaMFzl_qyp', 1614879489, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:38:09.323Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:38:09 GMT+0800 (台北標準時間)\"}'),
+('orpkpyrru71OLfoE7L1iQV61SLKW749T', 1614879500, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:38:20.486Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:38:20 GMT+0800 (台北標準時間)\"}'),
+('pO5AZ4T7ojjP8HjximGQIsAYzQG4keCR', 1614879956, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:45:56.342Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:45:56 GMT+0800 (台北標準時間)\"}'),
+('pasxxjpDaJ_ZwHwoWJ2EE6eC_mPPKzZI', 1614885355, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:15:55.084Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:15:55 GMT+0800 (台北標準時間)\"}'),
+('rB_lUFCHye6TxBre7o1zj4ZpyrId8F9W', 1615107541, '{\"cookie\":{\"originalMaxAge\":400000000,\"expires\":\"2021-03-07T08:59:00.684Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:52:20 GMT+0800 (台北標準時間)\"}'),
+('rDm_ol8OQsPP9LYiEr-m_HxMeh_Dcw4P', 1614885387, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:16:26.582Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:16:26 GMT+0800 (台北標準時間)\"}'),
+('sjqeUReCNl0vSZGEWOsJrZ2qp5SXRJ57', 1614881783, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:16:22.892Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:16:22 GMT+0800 (台北標準時間)\"}'),
+('vsrWtaXdl_SZPHpdUZhSWPz7xkQrGpmm', 1614881314, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:08:33.958Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:08:33 GMT+0800 (台北標準時間)\"}'),
+('wN-UiqcLpiY6_-qUxo6HW9gfsKNQjav2', 1614879526, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:38:46.162Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:38:46 GMT+0800 (台北標準時間)\"}'),
+('xddcVx4jPLk8BwDxORt9jKXu7wToz28i', 1614881106, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T18:05:05.614Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 00:05:05 GMT+0800 (台北標準時間)\"}'),
+('xxIS_YQx_IPzEFe7OpRseIMtTSgICSGB', 1614879241, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:34:01.340Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:34:01 GMT+0800 (台北標準時間)\"}'),
+('zHGuG3MUNDhw80zOGFDCCTTxUQnDb3hZ', 1614885368, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T19:16:07.506Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Wed Mar 03 2021 01:16:07 GMT+0800 (台北標準時間)\"}'),
+('zHuadatueuLL3c0Hz7TDzc4PRZFSVbFc', 1614880401, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:53:21.189Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:53:21 GMT+0800 (台北標準時間)\"}'),
+('zvWBq9Ut9IeIfwEBtapzDLMs24n6WbFl', 1614879495, '{\"cookie\":{\"originalMaxAge\":180000000,\"expires\":\"2021-03-04T17:38:14.577Z\",\"httpOnly\":true,\"path\":\"/\"},\"_garbage\":\"Tue Mar 02 2021 23:38:14 GMT+0800 (台北標準時間)\"}');
 
 -- --------------------------------------------------------
 
@@ -526,19 +612,19 @@ ALTER TABLE `campaign_prodduct`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart1_items`
 --
 ALTER TABLE `cart1_items`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=243;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=248;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart_activity`
 --
 ALTER TABLE `cart_activity`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `cart_studio`
 --
 ALTER TABLE `cart_studio`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `member`
@@ -556,7 +642,7 @@ ALTER TABLE `orders1`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `orders3`
 --
 ALTER TABLE `orders3`
-  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order_items1`
