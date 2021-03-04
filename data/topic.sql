@@ -166,7 +166,7 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`mid`, `username`, `account`, `password`, `email`, `address`, `birthday`, `tel`, `pic`, `created_at`) VALUES
-(84, 'fish', 'fish', '123456', '123@gmail.com', '台北市', '1987-01-22', '0915115144', '5fe549d52e3df.jpg', '2020-12-18 09:51:06');
+(84, 'fish123', 'fish123', '123456', '123@gmail.com', '台北市', '1987-01-22', '0915115144', '5fe549d52e3df.jpg', '2020-12-18 09:51:06');
 
 -- --------------------------------------------------------
 
