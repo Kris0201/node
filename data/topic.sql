@@ -166,9 +166,7 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`mid`, `username`, `account`, `password`, `email`, `address`, `birthday`, `tel`, `pic`, `created_at`) VALUES
-(84, 'fish', 'fish', '123456', 'spe9g0908@gmail.com', '台北市', '1987-01-22', '0915115144', '5fe549d52e3df.jpg', '2020-12-18 09:51:06'),
-(143, '王一明', 'ffff', '123456', '1111@gmaul.com', '台北市', '1970-01-03', '0915115144', NULL, '0000-00-00 00:00:00'),
-(144, '王一明', 'abcd', '123456', '11113@gmaul.com', NULL, NULL, NULL, NULL, '0000-00-00 00:00:00');
+(84, 'fish', 'fish', '123456', '123@gmail.com', '台北市', '1987-01-22', '0915115144', '5fe549d52e3df.jpg', '2020-12-18 09:51:06');
 
 -- --------------------------------------------------------
 
