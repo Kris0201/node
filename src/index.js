@@ -894,6 +894,30 @@ app.post("/campaignProductInfo", upload.none(), async (req, res) => {
   res.json(rows);
 });
 
+app.post("/search", upload.none(), async (req, res) => {
+  console.log("傳進來的搜尋資料", req.body);
+  const [
+    rows,
+  ] = await db.query("SELECT * FROM `campaign_prodduct` WHERE title LIKE ?  ", [
+    "%" + req.body.searchCampaign + "%",
+  ]);
+  res.json(rows);
+});
+
+app.use("/campaignlist", async (req, res) => {
+  const [rows] = await db.query(
+    "SELECT * FROM `campaign_prodduct` WHERE hot=1"
+  );
+  res.json(rows);
+});
+
+app.use("/campaignSearch", async (req, res) => {
+  const [rows] = await db.query(
+    "SELECT * FROM `campaign_prodduct` WHERE 1"
+  );
+  res.json(rows);
+});
+
 //---------------------------------------------------------------教室租借--------------------
 
 app.use("/studioIntro1", async (req, res) => {
@@ -912,22 +936,7 @@ app.post("/studiorent", async (req, res) => {
   console.log("rows", [rows]);
   res.json(rows);
 });
-app.post("/search", upload.none(), async (req, res) => {
-  console.log("傳進來的搜尋資料", req.body);
-  const [
-    rows,
-  ] = await db.query("SELECT * FROM `campaign_prodduct` WHERE title LIKE ?  ", [
-    "%" + req.body.searchCampaign + "%",
-  ]);
-  res.json(rows);
-});
 
-app.use("/campaignlist", async (req, res) => {
-  const [rows] = await db.query(
-    "SELECT * FROM `campaign_prodduct` WHERE hot=1"
-  );
-  res.json(rows);
-});
 
 //---------------------------------------------------------------教室租借--------------------
 
